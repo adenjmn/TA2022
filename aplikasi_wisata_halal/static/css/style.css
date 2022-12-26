@@ -1,0 +1,235 @@
+*
+{
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-shadow: rgba(0,0,0,.01) 0 0 1px;
+  text-shadow: rgba(0,0,0,.01) 0 0 1px;
+}
+body
+{
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.text-right {
+  text-align: right !important;
+}
+.text-decoration-none {
+  text-decoration: none !important;
+}
+
+.tab-content > .tab-pane {
+  display: none;
+  /*background-color: black;*/
+}
+
+.tab-content > .active {
+  display: block;
+}
+
+
+.pengguna {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.barup{
+  background-color: #7FBCD2;
+}
+
+.border {
+  /*border: 1px solid #A5F1E9 !important;*/
+  background-color: #fff;
+}
+
+/*** Package ***/
+.package-item {
+    box-shadow: 0 0 45px rgba(0, 0, 0, .08);
+}
+
+.package-item img {
+    transition: .5s;
+}
+
+.package-item:hover img {
+    transform: scale(1.1);
+}
+
+
+.img-fluid{
+  width: 400px;
+  height: 200px;
+}
+
+/*---------------------
+  Breadcrumb
+-----------------------*/
+
+.breadcrumb__text h2 {
+  font-size: 46px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.breadcrumb__option a {
+  display: inline-block;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 700;
+  margin-right: 20px;
+  position: relative;
+}
+
+.breadcrumb__option a:after {
+  position: absolute;
+  right: -12px;
+  top: 13px;
+  height: 1px;
+  width: 10px;
+  background: #ffffff;
+  content: "";
+}
+
+.breadcrumb__option span {
+  display: inline-block;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+/*---------------------
+  Shop Details
+-----------------------*/
+
+.product-details {
+  /*padding-top: 80px;*/
+}
+
+.product__details__pic__item {
+  margin-bottom: 20px;
+}
+
+.product__details__pic__item img {
+  min-width: 100%;
+}
+
+.product__details__text h3 {
+  color: #252525;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.product__details__text .product__details__rating {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.product__details__text .product__details__rating i {
+  margin-right: -2px;
+  color: #EDBB0E;
+}
+
+.product__details__text .product__details__rating span {
+  color: black;
+  margin-left: 4px;
+}
+.product__details__text p {
+  margin-bottom: 45px;
+  color: black;
+}
+
+.product__details__text .primary-btn {
+  padding: 16px 28px 14px;
+  margin-right: 6px;
+  margin-bottom: 5px;
+}
+
+.product__details__text .heart-icon {
+  display: inline-block;
+  font-size: 16px;
+  color: #6f6f6f;
+  padding: 13px 16px 13px;
+  background: #f5f5f5;
+}
+
+.product__details__text ul {
+  border-top: 1px solid #ebebeb;
+  /*padding-top: 40px;
+  margin-top: 50px;*/
+}
+
+.product__details__text ul li {
+  font-size: 16px;
+  color: #1c1c1c;
+  list-style: none;
+  line-height: 36px;
+}
+
+.product__details__text ul li b {
+  font-weight: 700;
+  width: 170px;
+  display: inline-block;
+}
+
+.product__details__text ul li span samp {
+  color: #dd2222;
+}
+
+.product__details__text ul li .share {
+  display: inline-block;
+}
+
+.product__details__text ul li .share a {
+  display: inline-block;
+  font-size: 15px;
+  color: #1c1c1c;
+  margin-right: 25px;
+}
+
+.product__details__text ul li .share a:last-child {
+  margin-right: 0;
+}
+
+.pro-qty {
+  width: 140px;
+  height: 50px;
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  background: #f5f5f5;
+  margin-bottom: 5px;
+}
+
+.pro-qty input {
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+  color: #6f6f6f;
+  width: 50px;
+  border: none;
+  background: #f5f5f5;
+  text-align: center;
+}
+
+.pro-qty .qtybtn {
+  width: 35px;
+  font-size: 16px;
+  color: #6f6f6f;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.mb-5 {
+  color: black;
+}
+
+hr{
+  color: grey;
+}

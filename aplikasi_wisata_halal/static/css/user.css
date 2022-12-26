@@ -1,0 +1,117 @@
+.profile p ,span{
+	color: #072736;
+	font-weight: 500;
+}
+.list-group-item.active {
+    background: #072736;
+}
+/* end common class */
+.top-status ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
+.top-status ul li {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: 8px solid #ddd;
+    box-shadow: 1px 1px 10px 1px #ddd inset;
+    margin: 10px 5px;
+}
+.top-status ul li.active {
+    border-color: #ffc107;
+    box-shadow: 1px 1px 20px 1px #ffc107 inset;
+}
+.rounded-circle{
+	background-color: #071f2a;
+}
+/* end timeline */
+.timeline{
+	background-color:#acb6e5;
+	color:#071f2a;
+	padding:30px 20px;
+	box-shadow:0px 0px 10px rgba(0,0,0,.5);
+}
+.timeline ul{
+	list-style-type:none;
+	border-left:2px solid #094a68;
+	padding:10px 5px;
+}
+.timeline ul li{
+	padding:20px 20px;
+	position:relative;
+	cursor:pointer;
+	transition:.5s;
+}
+.timeline ul li span{
+	display:inline-block;
+	background-color:#1685b8;
+	color: whitesmoke;
+	border-radius:25px;
+	padding:2px 5px;
+	font-size:15px;
+	text-align:center;
+}
+.timeline ul li .content h3{
+	color:#2E0249;
+	font-size:17px;
+	padding-top:5px;
+}
+.timeline ul li .content p{
+	padding:5px 0px 15px 0px;
+	font-size:15px;
+}
+.timeline ul li:before{
+	position:absolute;
+	content:'';
+	width:10px;
+	height:10px;
+	background-color:goldenrod;
+	border-radius:50%;
+	left:-11px;
+	top:28px;
+	transition:.5s;
+}
+.timeline ul li:hover{
+	background-color:#9dacee;
+	color: #000;
+}
+.timeline ul li:hover:before{
+	background-color:rgb(43, 255, 43);
+	box-shadow:0px 0px 10px 2px #0F0;
+}
+.timeline h4{
+	color: #072736;
+	text-align:center;
+}
+hr{
+	background-color: grey;
+}
+@media (max-width:300px){
+	.timeline{
+		width:100%;
+		padding:30px 5px 30px 10px;
+	}
+	.timeline ul li .content h3{
+		color:#34ace0;
+		font-size:15px;
+	}
+}
+
+.pill {
+	height:0px;
+	border-radius: 2px;
+	color: #c5dfeb;
+	border: 2px solid currentColor;
+	width: 50%;
+}
