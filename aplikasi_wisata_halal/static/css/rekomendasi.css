@@ -28,6 +28,7 @@ a, a:hover {
   font-size: 2.5rem;
 }
 
+
 /* Cards */
 .postcard {
   flex-wrap: wrap;
@@ -126,6 +127,24 @@ a, a:hover {
 }
 .postcard:hover .postcard__bar {
   width: 100px;
+}
+.desc{
+  font-size: 16px;
+  color: #1c1c1c;
+  list-style: none;
+  line-height: 36px;
+  /* margin-bottom: 45px; */
+  /* padding-left: 15px; */
+}
+.desc .fa , .desc .fas , .desc .far{
+  color: green;
+}
+.rate .fas, .rate .far {
+  color: rgb(76, 185, 76);
+}
+
+.desc .fa{
+
 }
 
 @media screen and (min-width: 769px) {
@@ -422,7 +441,27 @@ a, a:hover {
   background-color: transparent;
 }
 .custom-radio.rating .custom-control-input:checked ~ .custom-control-label::before {
-  color: #ffc107;
+  color: green;
   background-color: transparent;
   font-weight: 900;
+}
+
+.postcard__text .halal_desc{
+  /* margin-bottom: 0.5rem; */
+  /* font-weight: 500;
+  line-height: 1.2; */
+  color: black;
+  text-align: center;
+}
+.postcard__text .halal_desc a{
+  text-align: center;
+}
+.postcard__text .halal_desc a:hover{
+  color: green;
+}
+
+@media (max-width: 1200px) {
+  .postcard__text .halal_desc{
+    /* font-size: calc(1.275rem + 0.3vw) ; */
+  }
 }

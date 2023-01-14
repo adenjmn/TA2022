@@ -38,19 +38,21 @@ sql_trend = "SELECT tempatR, COUNT(*), AVG(rating) FROM ratings GROUP BY tempatR
 cursor.execute(sql_trend)
 result_trend = cursor.fetchall()
 trend = pd.DataFrame(result_trend,columns= ['tempat','count_tempat','avg_rating'])
-
+trend['tempat'] = trend['tempat'].str.title()
 # meta['id_tempat'] = le.fit_transform(np.ravel(xid_city))
 meta['id_tempat'] = le.fit_transform(meta['kota'])
 meta['id_tempat'] = meta['id_tempat'].apply(convert_int)
-meta['features'] = meta['kota']+meta['jenis']
-# meta['features'] = meta['jenis']
-trend['count_tempat'] = trend['count_tempat'].apply(convert_int)
 
+meta['features'] = meta['jenis']+meta['deskripsi']
+# meta['features'] = meta['jenis']
+
+trend['count_tempat'] = trend['count_tempat'].apply(convert_int)
+meta['tempat'] = meta['tempat'].str.title()
 # left join
 meta = pd.merge(meta,trend,on='tempat',how='left')
 meta['avg_rating'] = meta['avg_rating'].fillna(0)
 meta['avg_rating'] = meta['avg_rating'].round(1)
-meta['tempat'] = meta['tempat'].str.title()
+
 
 #proses tfid
 tf = TfidfVectorizer(analyzer='word',ngram_range=(1, 2),min_df=0, stop_words='english')
@@ -220,7 +222,7 @@ def ulasan():
 
         addbintang = float(bintang)
         meta['avg_rating'] = (meta['avg_rating'] * meta['count_tempat'] + addbintang)/(meta['count_tempat']+1)
-        print("AVG :",meta['avg_rating'])
+        # print("AVG :",meta['avg_rating'])
         meta['count_tempat'] = meta['count_tempat'] +1
         meta['avg_rating'] = meta['avg_rating'].round(1)
         try:
@@ -264,7 +266,10 @@ def rekomendasi(tempat):
     svd_model = SVD(n_factors= 50, n_epochs= 30, lr_all=0.01, reg_all=0.02)
 
     # cross_validate(svd_model, data_ratings, measures=['RMSE', 'MAE'], cv=5, verbose=True)
-    trainset = data_ratings.build_full_trainset()
+    # trainset = data_ratings.build_full_trainset()
+    trainset, testset = train_test_split(data_ratings, test_size=0.25)
+    svd_model.fit(trainset)
+    svd_predictions = svd_model.test(testset)
 
     # hybrid filtering
 
@@ -301,8 +306,10 @@ def rekomendasi(tempat):
     try:
         wisatas['est'] = wisatas['id_tempat'].apply(lambda x: svd_model.predict(userId, x).est)
         wisatas = wisatas.sort_values('est', ascending=False)
+        print('HF active')
     except:
-        pass
+        print('Non-HF active')
+        # pass
     wisatas = wisatas.head(10)
     # print(wisatas.info())    
     select_wisata = meta.loc[meta['tempat']==tempat]
@@ -314,20 +321,24 @@ def rekomendasi(tempat):
     
     search = meta[['tempat']]
     recS = wisatas.values.tolist()
-    # print(select_wisata.info())
+    print(select_wisata.info())
     arr_select_wisata = select_wisata.values.tolist()
     arr_meta = search.values.tolist()
     arr_src_reviews = src_reviews.values.tolist()
-    arr_select_wisata[0][10] = int(arr_select_wisata[0][10])
+    # try:
+    #     arr_select_wisata[0][10] = int(arr_select_wisata[0][10])
+    # except:
+    #     pass
+    # arr_select_wisata[0][10] = nan
     
     kota = arr_select_wisata[0][5]
     conn = sqlite3.connect('tugas-akhir.db')
     cursor = conn.cursor()
-    cursor.execute('Select tempat,img,type,address,latitude,longitude,city FROM support_place')
+    cursor.execute('Select tempat,img,type,address,latitude,longitude,city_nat FROM support_place')
     fetch_halal = cursor.fetchall()
     halal = pd.DataFrame(fetch_halal,columns= ['tempat','img','type','address','latitude','longitude','city'])
-    # halal = halal.dropna(subset=['latitude','longitude'])
-    print(halal.info())
+    halal = halal.dropna(subset=['latitude','longitude'])
+    # print(halal.info())
 
     src_lat = arr_select_wisata[0][3]
     src_coordinates = [item.strip() for item in src_lat.split(',')]
@@ -347,7 +358,7 @@ def rekomendasi(tempat):
     halal['distance'] = hdistances_km
     halal = halal.sort_values(by='distance', ascending=True)
     
-    print(halal.info())
+    # print(halal.info())
     arr_halal = halal.values.tolist()
     # print(len(arr_halal))
     mosque =[]
@@ -370,9 +381,11 @@ def rekomendasi(tempat):
     atm = atm[:5]
     hotel = hotel[:5]
 
+    arr_category = arr_select_wisata[0][2]
+    print(arr_category)
     title = arr_select_wisata[0][4]
 
-    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata,_meta=arr_meta, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm)
+    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata,_meta=arr_meta, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category)
 
 @app.route("/destinasi/")
 @app.route("/destinasi/<filter>")
@@ -404,10 +417,10 @@ def explore(filter = None):
         data_rate = new_data.sort_values(by='avg_rating',ascending=False)
         # print(data_rate['avg_rating'].head())
         _data = data_rate.values.tolist()
-        print(data_rate.info())
+        # print(data_rate.info())
         return render_template('destinasi.html', data=_data,filter=filter, user=user)
-    
-    filter = 'terdekat'
+    else:
+        filter = 'terdekat'
     
     return render_template('destinasi.html', data=_data,filter=filter, user=user)
 

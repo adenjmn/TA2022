@@ -99,9 +99,19 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6">
-                                <div class="product__details__text">
+                                <div class="container-fluid desc">
                                     
                                     <h3>{{ select[4] }}</h3>
+
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <p><i class="fa fa-landmark me-2"></i> {{ select[2] }}</p>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <p><i class="fa fa-map-marker-alt me-2"></i> {{ select[5] }}</p>
+                                        </div>
+                                    </div>
+                                    
                                     
                                     <div class="product__details__rating">
                                         {% if select[11] > 4.5 %}
@@ -109,31 +119,31 @@
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i><span>{{ select[11] }}</span>
+                                        <i class="fas fa-star"></i><span> {{ select[11] }}</span>
                                         {% elif select[11] > 3.5  and select[11] <= 4.5 %}
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
-                                        <i class="far fa-star"></i><span>{{ select[11] }}</span>
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
                                         {% elif select[11] > 2.5 and select[11] <= 3.5 %}
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i><span>{{ select[11] }}</span>
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
                                         {% elif select[11] > 1.5 and select[11] <= 2.5  %}
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i><span>{{ select[11] }}</span>
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
                                         {% elif select[11] > 1 and select[11] <= 1.5  %}
                                         <i class="fas fa-star"></i>
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i><span>{{ select[11] }}</span>
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
                                         {% else %}
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
@@ -159,30 +169,38 @@
     <div class="container-fluid" style="margin-top: 10px;">
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs justify-content-center">
-		  <li class="nav-item">
-		    <a class="nav-link active" data-bs-toggle="tab" href="#mosque">Mesjid</a>
-		  </li>
-		  <li class="nav-item">
-		    <a class="nav-link" data-bs-toggle="tab" href="#food">Restoran Halal</a>
-		  </li>
-          <li class="nav-item">
-		    <a class="nav-link" data-bs-toggle="tab" href="#hotel">Penginapan</a>
-		  </li>
-          <li class="nav-item">
-		    <a class="nav-link" data-bs-toggle="tab" href="#atm">ATM</a>
-		  </li>
-		  <li class="nav-item">
-		    <a class="nav-link" data-bs-toggle="tab" href="#review">Ulasan</a>
-		  </li>
+            {% if category != 'Mosque' %}
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#mosque">Mosque</a>
+            </li>
+            {% endif %}
+            
+            <li class="nav-item">
+                {% if category == 'Mosque' %}
+                <a class="nav-link active" data-bs-toggle="tab" href="#food">Restaurant</a>
+                {% else %}
+                <a class="nav-link" data-bs-toggle="tab" href="#food">Restaurant</a>
+                {% endif %}
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#hotel">Hostelry</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#atm">ATM</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#review">Reviews</a>
+            </li>
 		</ul>
 	</div>
     <section class="menu">
         <!-- Tab panes -->
         <div class="container">
             <div class="tab-content">
+                {% if category != 'Mosque' %}
                 <div class="tab-pane container active" id="mosque">
                     <div class="mb-5 postcard__text">
-                        <h4 class="mb-4">Daftar Masjid"</h4>
+                        <h4 class="halal_desc">Daftar Masjid</h4>
                         <div class="mb-5 postcard__text">
                             {% for mesjid in mosque %}
                             <div class="row">
@@ -191,7 +209,7 @@
                                         <i class="fas fa-mosque" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
                                             <h6>{{ mesjid[0] }} - <small>{{ mesjid[3] }}</small></h6>
-                                            <h6><small>Jarak <i> {{ mesjid[7] }} </i> km</small></h6>
+                                            <h6><small>Distance <i> {{ mesjid[7] }} </i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -201,9 +219,14 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if category == 'Mosque' %}
+                <div class="tab-pane container active" id="food">
+                {% else %}
                 <div class="tab-pane container fade" id="food">
+                {% endif %}
                     <div class="mb-5 postcard__text">
-                        <h4 class="mb-4">Daftar Resto</h4>
+                        <h4 class="halal_desc">Daftar Restaurant</h4>
                         <div class="mb-5 postcard__text">
                             {% for makan in resto %}
                             <div class="row">
@@ -212,7 +235,7 @@
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
                                             <h6>{{ makan[0] }} <small> - {{makan[3]}}</small></h6>
-                                            <h6><small>Jarak <i> {{makan[7]}}</i> km</small></h6>
+                                            <h6><small>Distance <i> {{makan[7]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -225,7 +248,7 @@
 
                 <div class="tab-pane container fade" id="hotel">
                     <div class="mb-5 postcard__text">
-                        <h4 class="mb-4">Daftar Hotel</h4>
+                        <h4 class="halal_desc">Daftar Hostelry</h4>
                         <div class="mb-5 postcard__text">
                             {% for iplace in hotel %}
                             <div class="row">
@@ -234,7 +257,7 @@
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
                                             <h6>{{ iplace[0] }} <small> - {{iplace[3]}}</small></h6>
-                                            <h6><small>Jarak <i> {{iplace[7]}}</i> km</small></h6>
+                                            <h6><small>Distance <i> {{iplace[7]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -247,7 +270,7 @@
 
                 <div class="tab-pane container fade" id="atm">
                     <div class="mb-5 postcard__text">
-                        <h4 class="mb-4">Daftar ATM</h4>
+                        <h4 class="halal_desc">Daftar ATM</h4>
                         <div class="mb-5 postcard__text">
                             {% for iplace in atm %}
                             <div class="row">
@@ -256,7 +279,7 @@
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
                                             <h6>{{ iplace[0] }} <small> - {{iplace[3]}}</small></h6>
-                                            <h6><small>Jarak <i> {{iplace[7]}}</i> km</small></h6>
+                                            <h6><small>Distance <i> {{iplace[7]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -270,7 +293,7 @@
                 <div class="tab-pane container fade" id="review">
                     <div class="mb-5 postcard__text">
                         {% if not session.id_user %}
-                        <h4>Login untuk memberikan rating</h4>
+                        <h4 class="halal_desc"><a href="/masuk">Sign in with your Google Account to write a review </a></h4>
                         {% else %}
                         <div class="col-12 col-md-9">
                             <form class="form-row" action="/ulas" method="POST">
@@ -290,8 +313,8 @@
                                   </div>
                                </div>
                                <div class="form-group input-group-sm col-md-12">
-                                  <label for="ulasan">Description</label>
-                                  <textarea class="form-control" rows="3" id="ulasan" name="ulasan"></textarea>
+                                  <label for="ulasan">Reviews</label>
+                                  <textarea class="form-control" rows="3" id="ulasan" name="ulasan" placeholder="Share details of your own experience at this place"></textarea>
                                </div>
                                {% for select in _select_wisata %}
                                <input type="hidden" name="tempat" value="{{ select[4] }}"/>
@@ -305,7 +328,7 @@
                         {% endif %}
                     </div>
                     <div class="mb-5 postcard__text">
-                        <h4 class="mb-4">{{ select[10] }} Ulasan untuk "{{ select[4] }}"</h4>
+                        <h4 class="halal_desc">{{ select[10]|round|int }} Reviews</h4>
                         {% for ulas in reviews %}
                         <div class="row">
                                 <div class="col-lg-12">
@@ -316,7 +339,7 @@
                                             <h6>{{ ulas[5] }}
                                                 <!-- <small> - <i>01 Jan 2045</i></small> -->
                                             </h6>
-                                            <div class="text-warning mb-2">
+                                            <div class="rate mb-2">
                                                 <div title='Rating {{ ulas[2] }}''>
                                                     {% if ulas[2] > 4.5 %}
                                                     <i class="fas fa-star"></i>
@@ -386,15 +409,12 @@
                         <i class="fa fa-map-marker-alt me-2"></i> {{ d[5] }}
                     </div>
                     <div class="postcard__bar"></div>
-                    <div class="postcard__subtitle" title="Skor Prediksi">
-                        <i class="fab fa-product-hunt"></i> {{ d[13] }}
-                    </div>
                     <div class="postcard__preview-txt">
                         <p>{{ d[8] }}</p> 
                     </div>
                     <ul class="postcard__tagbox">
                         <li class="tag__item" title="Rating"><i class="fa fa-star me-2"></i> {{d[6]}}</li>
-                        <li class="tag__item" title="Jarak"><i class="fas fa-tachometer-alt"></i> {{d[12]}} km</li>
+                        <li class="tag__item" title="Distance"><i class="fas fa-tachometer-alt"></i> {{d[12]}} km</li>
                         <li class="tag__item"><i class="fa fa-landmark me-2"></i> {{d[4]}}</li>
                         <li class="tag__item play yellow">
                             <a href="#"><i class="fas fa-play mr-2"></i>Open</a>
