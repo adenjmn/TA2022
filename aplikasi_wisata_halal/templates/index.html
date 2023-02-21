@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>AN - Wisata Halal</title>
+    <title>Wisata Halal</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -36,7 +36,7 @@
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a href="" class="text-decoration-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">H</span>.Travel</h1>
+                    <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
@@ -72,7 +72,11 @@
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         {% for user in user %}
-                        <img src="{{ user[1] }}" width="40" height="40" class="rounded-circle">
+                        {% if user[1] == 'default' %}
+                            <img src="{{ url_for('static', filename='img/user.jpg') }}" width="70" class="rounded-circle">
+                        {% else %}
+                            <img src="{{ user[1] }}"  width="40" height="40" class="rounded-circle">
+                        {% endif %}
                         {% endfor %}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -93,7 +97,7 @@
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="/" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                        <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
                     </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
@@ -108,22 +112,20 @@
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active" style="height: 410px;">
-                            <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipMCydsxzp2dQaFWpmL7Os4cWwkSYd2ziifm3gCU=w408-h271-k-no" alt="Image">
+                            <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipMCydsxzp2dQaFWpmL7Os4cWwkSYd2ziifm3gCU" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
-                                    <!-- <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4> -->
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Pariwisata Halal</h3>
-                                    <a href="" class="btn btn-light py-2 px-3">Explore</a>
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Halal/Muslim Friendly Destination</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Muslim Travellers </h3>
                                 </div>
                             </div>
                         </div>
                         <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipMbvdYiSMKYIbiQbh3ygthS6GWJgG7LUwZtoD5J=w486-h240-k-no" alt="Image">
+                            <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipOicfTLyNPy7yY-PrA1bkndgKMP_0rDpJUcOgKQ=w408-h272-k-no" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
-                                    <!-- <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4> -->
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Liburan</h3>
-                                    <a href="" class="btn btn-light py-2 px-3">Explore</a>
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Knowledgeable Trusted for Halal/Muslim friendly Travel.</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Vacation</h3>
                                 </div>
                             </div>
                         </div>
@@ -151,25 +153,25 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
                     <h1 class="fa fa-mosque text-success m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Tempat Ibadah</h5>
+                    <h4 class="font-weight-semi-bold m-0">Mosque</h4>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
                     <h1 class="fa fa-utensils text-success m-0 mr-2"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Makanan Halal</h5>
+                    <h4 class="font-weight-semi-bold m-0">Halal Food</h4>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
                     <h1 class="fa fa-star text-success m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Ulasan</h5>
+                    <h4 class="font-weight-semi-bold m-0">Reviews</h4>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
                     <h1 class="fa fa-globe-asia text-success m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Global</h5>
+                    <h4 class="font-weight-semi-bold m-0">Travellers</h4>
                 </div>
             </div>
         </div>
@@ -181,28 +183,11 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h1 class="mb-5">Trending Destinasi</h1>
+                <h3 class="mb-5">About Wisata Halal</h3>
+                <p>Wisata Halal, the Halal travel guide platform, is becoming a better traveler. Travelers turn to Wisata Halal to find mosques, Halal restaurants and discover nearby points of interest.</p>
+                <p>Muslim travellers to explore the world with peace of mind so that it can benefit Travellers</p>
             </div>
         </div>
-        <ul class="cards">
-            {% for d in data %}
-            <li>
-                <a href="recs/{{ d[4] }}" class="card">
-                    <img src="{{ d[6] }}" class="card__image" alt="" />
-                    <div class="card__overlay">        
-                        <div class="card__header">
-                            <p bg-black>{{ d[4] }}</p>
-                        </div>
-                        <div class="card__header">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i> {{ d[5] }}</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-landmark me-2"></i> {{ d[2] }}</small>
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-star me-2"></i> {{ d[11] }}</small>
-                        </div>
-                    </div>
-                </a>      
-            </li>
-            {% endfor %}
-        </ul>
     </div>
     <!-- Package End -->
 

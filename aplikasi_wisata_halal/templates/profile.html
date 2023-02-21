@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>AN - Wisata Halal</title>
+    <title>Profile - Wisata Halal</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -36,8 +36,8 @@
     <div class="container-fluid">
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <a href="" class="text-decoration-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">H</span>.Travel</h1>
+                <a href="/" class="text-decoration-none">
+                    <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
@@ -65,7 +65,7 @@
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="/" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span>H</span>Travel</h1>
+                        <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
                     </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
@@ -91,18 +91,19 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
-                                    {% if user[9] == 0 %}
-                                    <img src="{{ url_for('static', filename='img/user.png') }}" alt="{{ user[11] }}" class="rounded-circle p-1" width="110">
+                                    {% if user[8] == 'default' %}
+                                    <img src="{{ url_for('static', filename='img/user.jpg') }}" alt="{{ user[1] }}" class="rounded-circle p-1" width="110">
                                     {% else %}
-                                    <img src="{{ user[9] }}" alt="{{ user[11] }}" class="rounded-circle p-1" width="110">
+                                    <img src="{{ user[8] }}" alt="{{ user[1] }}" class="rounded-circle p-1" width="110">
                                     {% endif %}
                                     <div class="mt-3 profile card-body">
-                                        <h4>{{ user[2] }}</h4>
+                                        <h4>{{ user[1] }}</h4>
+                                        <h4 class="id_user">{{ user[2] }}</h4>
                                         <hr>
-                                        <p>LEVEL {{ user[5] }}</p>
-                                        <p>POINTS {{ user[4] }}</p>
-                                        <span>Status:</span>
-                                        <span class="badge badge-success">{{ user[11] }} </span>
+                                        <p>LEVEL : {{ user[4] }}</p>
+                                        <p>POINTS : {{ user[3] }}</p>
+                                        <span>Status : </span>
+                                        <span class="badge badge-success">{{ user[10] }} </span>
                                     </div>
                                 </div>
                             </div>
@@ -118,31 +119,31 @@
                                     <ul>
                                         {% for recent in history %}
                                         <li>
-                                            <span>{{ recent[6] }}</span>
+                                            <a href="recs/{{ recent[3] }}">
+                                            
                                             <div class="content">
-                                                <a href="recs/{{ recent[5] }}">
-                                                <h3>{{ recent[5] }}</h3>
-                                                </a>
-                                                <div title='Rating {{ recent[4] }}'>
-                                                    {% if recent[4] == '5.0' %}
+                                                <span>{{ recent[3] }}</span>
+                                                <h3> {{ recent[4] }}</h3>
+                                                <div title='Rating {{ recent[2] }}'>
+                                                    {% if recent[2] == "5" %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
-                                                    {% elif recent[4] == '4.0' %}
+                                                    {% elif recent[2] == "4" %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="far fa-star"></i>
-                                                    {% elif recent[4] == '3.0' %}
+                                                    {% elif recent[2] == "3" %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="far fa-star"></i>
                                                     <i class="far fa-star"></i>
-                                                    {% elif recent[4] == '2.0'  %}
+                                                    {% elif recent[2] == "2"  %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="far fa-star"></i>
@@ -156,8 +157,9 @@
                                                     <i class="far fa-star"></i>
                                                     {% endif %}
                                                 </div>
-                                                <p>{{ recent[7] }}</p>
+                                                <p>{{ recent[5] }}</p>
                                             </div>
+                                            </a>
                                         </li>
                                         {% endfor %}
                                     </ul>

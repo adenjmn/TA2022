@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Wisata Halal</title>
+    <title>Explore - Wisata Halal</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -35,8 +35,9 @@
     <div class="container-fluid">
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <a href="" class="text-decoration-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">H</span>.Travel</h1>
+                <a href="/" class="text-decoration-none">
+                    <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
+                    <!-- <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">H</span>.Travel</h1> -->
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
@@ -72,7 +73,11 @@
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         {% for user in user %}
-                        <img src="{{ user[1] }}" width="40" height="40" class="rounded-circle">
+                        {% if user[1] == 'default' %}
+                            <img src="{{ url_for('static', filename='img/user.jpg') }}" width="70" class="rounded-circle">
+                        {% else %}
+                            <img src="{{ user[1] }}"  width="40" height="40" class="rounded-circle">
+                        {% endif %}
                         {% endfor %}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -93,7 +98,7 @@
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="/" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                        <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
                     </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>

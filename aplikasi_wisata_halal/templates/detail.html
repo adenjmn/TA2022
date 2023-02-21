@@ -27,7 +27,7 @@
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a href="/" class="text-decoration-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold">H<span class="text-success font-weight-bold">.Travel</span></h1>
+                    <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
@@ -56,13 +56,24 @@
                 {% if not session.id_user %}
                 <a href="/masuk" class="btn border">
                     <i class="fas fa-user text-info"></i>
-                    <span class="badge" style="color: black;">Sign In</span>
+                    <span class="badge">Sign In</span>
                 </a>
                 {% else %}
-                <a href="/logout" class="btn border">
-                    <i class="fas fa-user text-info"></i>
-                    <span class="badge" style="color: black;">Logout</span>
-                </a>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% for user in user %}
+                        {% if user[1] == 'default' %}
+                            <img src="{{ url_for('static', filename='img/user.jpg') }}" width="70" class="rounded-circle">
+                        {% else %}
+                            <img src="{{ user[1] }}"  width="40" height="40" class="rounded-circle">
+                        {% endif %}
+                        {% endfor %}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="/user">My Profile</a></li>
+                      <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                  </div>
                 {% endif %}
             </div>
         </div>
@@ -73,7 +84,7 @@
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="/" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">H</span>Travel</h1>
+                        <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
                     </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
@@ -183,7 +194,7 @@
                 {% endif %}
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#hotel">Hostelry</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#hotel">Hotel</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#atm">ATM</a>
@@ -200,7 +211,7 @@
                 {% if category != 'Mosque' %}
                 <div class="tab-pane container active" id="mosque">
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">Daftar Masjid</h4>
+                        <h4 class="halal_desc">More to explore mosque</h4>
                         <div class="mb-5 postcard__text">
                             {% for mesjid in mosque %}
                             <div class="row">
@@ -208,7 +219,8 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-mosque" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ mesjid[0] }} - <small>{{ mesjid[3] }}</small></h6>
+                                            <h6>{{ mesjid[0] }}</h6>
+                                            <h6><small>{{ mesjid[3] }}</small></h6>
                                             <h6><small>Distance <i> {{ mesjid[7] }} </i> km</small></h6>
                                         </div>
                                     </div>
@@ -226,7 +238,7 @@
                 <div class="tab-pane container fade" id="food">
                 {% endif %}
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">Daftar Restaurant</h4>
+                        <h4 class="halal_desc">More to explore Restaurant</h4>
                         <div class="mb-5 postcard__text">
                             {% for makan in resto %}
                             <div class="row">
@@ -234,7 +246,8 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ makan[0] }} <small> - {{makan[3]}}</small></h6>
+                                            <h6>{{ makan[0] }}</h6>
+                                            <h6><small>{{makan[3]}}</small></h6>
                                             <h6><small>Distance <i> {{makan[7]}}</i> km</small></h6>
                                         </div>
                                     </div>
@@ -248,7 +261,7 @@
 
                 <div class="tab-pane container fade" id="hotel">
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">Daftar Hostelry</h4>
+                        <h4 class="halal_desc">More to explore Hotel</h4>
                         <div class="mb-5 postcard__text">
                             {% for iplace in hotel %}
                             <div class="row">
@@ -256,7 +269,8 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ iplace[0] }} <small> - {{iplace[3]}}</small></h6>
+                                            <h6>{{ iplace[0] }}</h6>
+                                            <h6><small>{{iplace[3]}}</small></h6>
                                             <h6><small>Distance <i> {{iplace[7]}}</i> km</small></h6>
                                         </div>
                                     </div>
@@ -270,7 +284,7 @@
 
                 <div class="tab-pane container fade" id="atm">
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">Daftar ATM</h4>
+                        <h4 class="halal_desc">More to explore ATM</h4>
                         <div class="mb-5 postcard__text">
                             {% for iplace in atm %}
                             <div class="row">
@@ -278,7 +292,8 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ iplace[0] }} <small> - {{iplace[3]}}</small></h6>
+                                            <h6>{{ iplace[0] }}</h6>
+                                            <h6><small>{{iplace[3]}}</small></h6>
                                             <h6><small>Distance <i> {{iplace[7]}}</i> km</small></h6>
                                         </div>
                                     </div>
@@ -300,15 +315,15 @@
                                 <div class="form-group input-group-sm col-md-3">
                                   <label>Rating</label>
                                   <div class="rating custom-radio">
-                                     <input type="radio" id="value5" name="rating" class="custom-control-input" value="5.0"/>
+                                     <input type="radio" id="value5" name="rating" class="custom-control-input" value="5"/>
                                      <label for="value5" class="custom-control-label"></label>
-                                     <input type="radio" id="value4" name="rating" class="custom-control-input" value="4.0"/>
+                                     <input type="radio" id="value4" name="rating" class="custom-control-input" value="4"/>
                                      <label for="value4" class="custom-control-label"></label>
-                                     <input type="radio" id="value3" name="rating" class="custom-control-input" value="3.0"/>
+                                     <input type="radio" id="value3" name="rating" class="custom-control-input" value="3"/>
                                      <label for="value3" class="custom-control-label"></label>
-                                     <input type="radio" id="value2" name="rating" class="custom-control-input" value="2.0"/>
+                                     <input type="radio" id="value2" name="rating" class="custom-control-input" value="2"/>
                                      <label for="value2" class="custom-control-label"></label>
-                                     <input type="radio" id="value1" name="rating" class="custom-control-input" value="1.0" />
+                                     <input type="radio" id="value1" name="rating" class="custom-control-input" value="1" />
                                      <label for="value1" class="custom-control-label"></label>
                                   </div>
                                </div>
@@ -396,7 +411,7 @@
     <!-- partial:index.partial.html -->
     <section class="light">
         <div class="container py-4">
-            <h1 class="h1 text-center" id="pageHeaderTitle">Rekomendasi Wisata</h1>
+            <h1 class="h1 text-center" id="pageHeaderTitle">Similar Destinations (Recommender)</h1>
             {% for d in data %}
             <article class="postcard dark yellow">
                 <a class="postcard__img_link" href="/recs/{{ d[0] }}">

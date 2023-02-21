@@ -408,11 +408,15 @@ h4, .h4 {
 }
 
 h5, .h5 {
-  font-size: 1.25rem;
+  font-size: 2rem;
 }
 
 h6, .h6 {
-  font-size: 1rem;
+  font-size: 1.35rem;
+  color:black;
+}
+h6 small{
+  color:rgb(65, 66, 65);
 }
 
 .lead {
@@ -4633,6 +4637,7 @@ input[type="button"].btn-block {
 }
 
 .badge {
+  color:grey;
   display: inline-block;
   padding: 0.25em 0.4em;
   font-size: 75%;
@@ -4642,6 +4647,10 @@ input[type="button"].btn-block {
   white-space: nowrap;
   vertical-align: baseline;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.btn:hover{
+  background-color: #F0F0F0;
+  color:#00e600;
 }
 
 @media (prefers-reduced-motion: reduce) {

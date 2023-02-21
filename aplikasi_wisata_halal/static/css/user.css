@@ -3,9 +3,17 @@
 }
 
 .profile p ,span{
-	color: #072736;
+	color: #3C4048;
 	font-weight: 500;
 }
+.profile h4{
+	font-size:18px;
+}
+.profile .id_user{
+	color: #434242;
+	font-size:18px;
+}
+
 .list-group-item.active {
     background: #072736;
 }
@@ -63,17 +71,18 @@
 	color: whitesmoke;
 	border-radius:25px;
 	padding:2px 5px;
-	font-size:15px;
+	font-size:18px;
 	text-align:center;
 }
 .timeline ul li .content h3{
-	color:#2E0249;
-	font-size:17px;
+	color:#144272;
+	font-size:14px;
 	padding-top:5px;
 }
 .timeline ul li .content p{
 	padding:5px 0px 15px 0px;
 	font-size:15px;
+	color: #03001C;
 }
 .timeline ul li:before{
 	position:absolute;
@@ -86,18 +95,22 @@
 	top:28px;
 	transition:.5s;
 }
+.timeline ul li .content:hover{
+	color: goldenrod;
+}
 .timeline ul li:hover{
 	background-color:#9dacee;
-	color: #000;
+	color: #D4AC2B;
 }
 .timeline ul li:hover:before{
 	background-color:rgb(43, 255, 43);
 	box-shadow:0px 0px 10px 2px #0F0;
 }
 .timeline h4{
-	color: #072736;
+	color: #18122B;
 	text-align:center;
 }
+
 hr{
 	background-color: grey;
 }

@@ -15,7 +15,7 @@ import geocoder
 
 le = LabelEncoder()
 
-conn = sqlite3.connect('tugas-akhir.db')
+conn = sqlite3.connect('../../tugas-akhir.db')
 cursor = conn.cursor()
 
 sql_meta = "SELECT id_tempat,jenis, coordinat, tempat,city,img, description FROM data"
@@ -45,6 +45,7 @@ meta['id_tempat'] = meta['id_tempat'].apply(convert_int)
 
 meta['features'] = meta['jenis']+meta['deskripsi']
 # meta['features'] = meta['jenis']
+meta['deskripsi'] = meta['deskripsi'].fillna(value="")
 
 trend['count_tempat'] = trend['count_tempat'].apply(convert_int)
 meta['tempat'] = meta['tempat'].str.title()
@@ -71,7 +72,7 @@ indices = pd.Series(meta.index, index=meta['tempat'])
 # # # print(store.info())
 # # # print(store.id_tempat.value_counts())
 def koneksi():
-    con = sqlite3.connect('tugas-akhir.db')
+    con = sqlite3.connect('../../tugas-akhir.db')
     cur = con.cursor()
     return cur
 def haversine_distance(lat1, lon1, lat2, lon2):
@@ -106,7 +107,7 @@ cities['Distance'] = distances_km
 
 
 def check_user(id_user, password):
-    con = sqlite3.connect('tugas-akhir.db')
+    con = sqlite3.connect('../../tugas-akhir.db')
     cur = con.cursor()
     cur.execute('Select id_user,password FROM user WHERE id_user=? and password=?', (id_user, password))
 
@@ -122,9 +123,6 @@ app.secret_key = "@adenjmn"
 
 @app.route("/")
 def home():
-    data = meta.sort_values(by='count_tempat',ascending=False)
-    data = data.head(6)
-    data = data.values.tolist()
     arr_meta = meta.values.tolist()
     
     if 'id_user' in session:
@@ -134,9 +132,9 @@ def home():
         cursor = koneksi()
         cursor.execute('SELECT id_user,img_src FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
         user = cursor.fetchall()
-        return render_template('index.html', _meta=arr_meta, data=data,msg=msg,user=user)
+        return render_template('index.html', _meta=arr_meta,msg=msg,user=user)
     else:
-        return render_template('index.html', _meta=arr_meta, data=data)
+        return render_template('index.html', _meta=arr_meta)
 
 @app.route('/masuk')
 def masuk():
@@ -159,9 +157,9 @@ def register():
             msg = ['A user with that username already exists.']
             return render_template('daftar.html',msg=msg)
         else:
-            con = sqlite3.connect('tugas-akhir.db')
+            con = sqlite3.connect('../../tugas-akhir.db')
             cursor = con.cursor()
-            cursor.execute('INSERT INTO user(nama_pengguna,id_user,password,points,level,img_src) values (?,?,?,?,?,?)', (full_name,id_user, password,0,0,0))
+            cursor.execute('INSERT INTO user(nama_pengguna,id_user,password,points,level,img_src) values (?,?,?,?,?,?)', (full_name,id_user, password,0,0,'default'))
             con.commit()
             con.close()
             session['id_user'] = id_user
@@ -190,6 +188,7 @@ def profile():
         cursor.execute('SELECT * FROM ratings WHERE id=?',(userId,))
         history = cursor.fetchall()
         n_history = len(history)
+        # print(user)
         
         return render_template('profile.html' , profil=user, history=history,n_history=n_history)
     else:
@@ -213,7 +212,7 @@ def ulasan():
         review = request.form['ulasan']
         tanggal = date.today()  
 
-        con = sqlite3.connect('tugas-akhir.db')
+        con = sqlite3.connect('../../tugas-akhir.db')
         cursor = con.cursor()
         cursor.execute('SELECT * FROM user WHERE id_user=? order by id_user limit 1',(userId,))
         user = cursor.fetchall()
@@ -237,7 +236,7 @@ def ulasan():
 
 @app.route('/recs/<tempat>')
 def rekomendasi(tempat):
-    conn = sqlite3.connect('tugas-akhir.db')
+    conn = sqlite3.connect('../../tugas-akhir.db')
     cursor = conn.cursor()
     # collaborative
     sql_ratings = "SELECT id, id_tempat,rating,review,tempatR,nama_pengguna FROM ratings"
@@ -286,11 +285,17 @@ def rekomendasi(tempat):
     indices_map = store.set_index('id_tempat')
     tempat = tempat.title()
     if 'id_user' in session:
+        user_id = session["id_user"]
         userId = session["id_user"]
-    # print(tempat)
+        cursor = koneksi()
+        cursor.execute('SELECT id_user,img_src FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
+        user = cursor.fetchall()
+    else:
+        user = ''
+
     idx = indices[tempat]
     # id_tempat = store.loc[tempat]['id_tempat']
-    # print('IDX = ',idx,'\n ID = ',userId)
+    # print('IDX = ',idx,'\n ID = ',userId,"\n Name Place = ",tempat)
     
     wisata_id = store.loc[tempat]['id_tempat_rating']
     sim_scores = list(enumerate(cosine_sim[int(idx)]))
@@ -315,13 +320,13 @@ def rekomendasi(tempat):
     select_wisata = meta.loc[meta['tempat']==tempat]
     
     # print(select_wisata.info())
-    
+    src_rating['tempat'] = src_rating['tempat'].str.title() # nama tempat
     src_reviews = src_rating.loc[src_rating['tempat'] == tempat]
     
     
     search = meta[['tempat']]
     recS = wisatas.values.tolist()
-    print(select_wisata.info())
+    # print(select_wisata.info())
     arr_select_wisata = select_wisata.values.tolist()
     arr_meta = search.values.tolist()
     arr_src_reviews = src_reviews.values.tolist()
@@ -332,7 +337,7 @@ def rekomendasi(tempat):
     # arr_select_wisata[0][10] = nan
     
     kota = arr_select_wisata[0][5]
-    conn = sqlite3.connect('tugas-akhir.db')
+    conn = sqlite3.connect('../../tugas-akhir.db')
     cursor = conn.cursor()
     cursor.execute('Select tempat,img,type,address,latitude,longitude,city_nat FROM support_place')
     fetch_halal = cursor.fetchall()
@@ -360,7 +365,6 @@ def rekomendasi(tempat):
     
     # print(halal.info())
     arr_halal = halal.values.tolist()
-    # print(len(arr_halal))
     mosque =[]
     resto =[]
     atm =[]
@@ -382,10 +386,10 @@ def rekomendasi(tempat):
     hotel = hotel[:5]
 
     arr_category = arr_select_wisata[0][2]
-    print(arr_category)
+    # print(arr_category)
     title = arr_select_wisata[0][4]
 
-    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata,_meta=arr_meta, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category)
+    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata,_meta=arr_meta, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category,user=user)
 
 @app.route("/destinasi/")
 @app.route("/destinasi/<filter>")
