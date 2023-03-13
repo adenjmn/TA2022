@@ -54,9 +54,13 @@
             {% endfor %}
             <div class="col-lg-3 col-6 text-right">
                 {% if not session.id_user %}
-                <a href="/masuk" class="btn border">
+                <a href="/signup" class="btn border">
                     <i class="fas fa-user text-info"></i>
-                    <span class="badge">Sign In</span>
+                    <span class="badge">Sign Up</span>
+                </a>
+                <a href="/signin" class="btn border">
+                    <i class="fas fa-user text-info"></i>
+                    <span class="badge">Login</span>
                 </a>
                 {% else %}
                 <div class="dropdown">
@@ -308,7 +312,7 @@
                 <div class="tab-pane container fade" id="review">
                     <div class="mb-5 postcard__text">
                         {% if not session.id_user %}
-                        <h4 class="halal_desc"><a href="/masuk">Sign in with your Google Account to write a review </a></h4>
+                        <h4 class="halal_desc"><a href="/signin">Sign in with your Google Account to write a review </a></h4>
                         {% else %}
                         <div class="col-12 col-md-9">
                             <form class="form-row" action="/ulas" method="POST">

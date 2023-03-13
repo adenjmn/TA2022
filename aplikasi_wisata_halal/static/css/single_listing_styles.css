@@ -4650,7 +4650,6 @@ input[type="button"].btn-block {
 }
 .btn:hover{
   background-color: #F0F0F0;
-  color:#00e600;
 }
 
 @media (prefers-reduced-motion: reduce) {

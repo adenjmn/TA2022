@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Wisata Halal</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css'>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<body>
+<div id="menu-overlay"></div>
+<div id="menu-toggle" class="closed" data-title="Menu">
+    <i class="fa fa-bars"></i>
+    <i class="fa fa-times"></i>
+  </div>
+<header id="main-header">
+  <nav id="sidenav">
+    <div id="sidenav-header">
+      <div id="profile-picture">
+      	<img src="http://www.gravatar.com/avatar/fa4df8540bab3cb38f7dfa60c6e0522c.png"/>
+      </div>
+      <a href="#" id="profile-link">Jesse Couch</a>
+    </div>
+    <div id="account-actions">
+      <a href="" data-title="Home"><i class="fa fa-home"></i></a>
+      <!-- <a href="#" id="messages" data-title="Messages" data-newmessages="1"><i class="fa fa-inbox"></i></a> -->
+      <a href="#" data-title="Logout"><i class="fa fa-cog"></i></a>
+    </div>
+    <ul id="main-nav">
+      <li>
+        <a href="/admin">
+          <i class="fa fa-tachometer"></i>
+          Dashboard
+        </a>
+      </li>
+      <li class="active">
+        <a href="../destination">
+          <i class="fa fa-check-square-o"></i>
+          Destination
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <i class="fa fa-user"></i>
+          Admin
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</header>
+<section id="content" class="form-style">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../destination">Destination</a></li>
+      {% for i in destination %}
+      <li class="breadcrumb-item active" aria-current="page">{{i[4]}}</li>
+      {% endfor %}
+    </ol>
+  </nav>
+  
+    {% for i in destination %}
+    <img src="{{ i[5] }}" alt="" class="fimage"/>
+    <form action="">
+      <div class="section"><span>1</span>Name &amp; Type</div>
+      <div class="inner-wrap">
+        <label class="name" id="name" for="name">Name</label>
+        <input class="form-control form-control-sm" value="{{i[3]}}" name="name" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example" disabled>
+        <label class="type" id="type" for="type">Type</label>
+        <input class="form-control form-control-sm" value="{{i[1]}}" name="type" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">
+      </div>
+      <div class="section"><span>2</span>Location - City &amp; Coordinate</div>
+      <div class="inner-wrap">
+        <label class="city" id="city" for="city">City</label>
+        <input class="form-control form-control-sm" value="{{i[4]}}" name="city" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">
+        <label class="coordinate" id="coordinate" for="coordinate">City</label>
+        <input class="form-control form-control-sm" value="{{i[2]}}" name="coordinate" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">
+      </div>
+      <div class="section"><span>3</span>Description</div>
+      <div class="inner-wrap">
+        <label class="desc" id="desc" for="desc">Description</label>
+        <textarea class="form-control form-control-sm" rows="4">{{i[6]}}</textarea>
+      </div>
+      <div class="section"><button type="submit" class="btn btn-primary">UPDATE</button></div>
+    </form>
+    {% endfor %}
+        
+</section>
+
+<footer></footer>
+<!-- </body> -->
+<!-- partial -->
+
+
+
+<script  src="{{ url_for('static', filename='js/admin_destination.js') }}"></script>
+
+</body>
+</html>

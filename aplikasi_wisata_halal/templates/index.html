@@ -64,9 +64,13 @@
             {% endfor %}
             <div class="col-lg-3 col-6 text-right">
                 {% if not session.id_user %}
-                <a href="/masuk" class="btn border">
+                <a href="/signup" class="btn border">
                     <i class="fas fa-user text-info"></i>
-                    <span class="badge">Sign In</span>
+                    <span class="badge">Sign Up</span>
+                </a>
+                <a href="/signin" class="btn border">
+                    <i class="fas fa-user text-info"></i>
+                    <span class="badge">Login</span>
                 </a>
                 {% else %}
                 <div class="dropdown">

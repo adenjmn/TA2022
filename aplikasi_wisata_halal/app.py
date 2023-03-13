@@ -15,58 +15,49 @@ import geocoder
 
 le = LabelEncoder()
 
-conn = sqlite3.connect('../../tugas-akhir.db')
-cursor = conn.cursor()
-
-sql_meta = "SELECT id_tempat,jenis, coordinat, tempat,city,img, description FROM data"
-cursor.execute(sql_meta)
-result_meta = cursor.fetchall()
-
 def convert_int(x):
     try:
         return int(x)
     except:
         return np.nan
 
-# content-based
-meta = pd.DataFrame(result_meta,columns= ['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi'])
-meta = meta.dropna(subset=['jenis'])
+conn = sqlite3.connect('../../tugas-akhir.db')
+cursor = conn.cursor()
+sql_meta = "SELECT id_tempat,jenis, coordinat, tempat,city,img, description FROM data"
+cursor.execute(sql_meta)
+result_meta = cursor.fetchall()
+def meta_data():
+    # content-based
+    meta = pd.DataFrame(result_meta,columns= ['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi'])
+    meta = meta.dropna(subset=['jenis'])
 
-xid_city = meta['kota']
+    xid_city = meta['kota']
 
-sql_trend = "SELECT tempatR, COUNT(*), AVG(rating) FROM ratings GROUP BY tempatR"
-cursor.execute(sql_trend)
-result_trend = cursor.fetchall()
-trend = pd.DataFrame(result_trend,columns= ['tempat','count_tempat','avg_rating'])
-trend['tempat'] = trend['tempat'].str.title()
-# meta['id_tempat'] = le.fit_transform(np.ravel(xid_city))
-meta['id_tempat'] = le.fit_transform(meta['kota'])
-meta['id_tempat'] = meta['id_tempat'].apply(convert_int)
+    conn = sqlite3.connect('../../tugas-akhir.db')
+    cursor = conn.cursor()
 
-meta['features'] = meta['jenis']+meta['deskripsi']
-# meta['features'] = meta['jenis']
-meta['deskripsi'] = meta['deskripsi'].fillna(value="")
+    sql_trend = "SELECT tempatR, COUNT(*), AVG(rating) FROM ratings GROUP BY tempatR"
+    cursor.execute(sql_trend)
+    result_trend = cursor.fetchall()
+    trend = pd.DataFrame(result_trend,columns= ['tempat','count_tempat','avg_rating'])
+    trend['tempat'] = trend['tempat'].str.title()
+    # meta['id_tempat'] = le.fit_transform(np.ravel(xid_city))
+    meta['id_tempat'] = le.fit_transform(meta['kota'])
+    meta['id_tempat'] = meta['id_tempat'].apply(convert_int)
 
-trend['count_tempat'] = trend['count_tempat'].apply(convert_int)
-meta['tempat'] = meta['tempat'].str.title()
-# left join
-meta = pd.merge(meta,trend,on='tempat',how='left')
-meta['avg_rating'] = meta['avg_rating'].fillna(0)
-meta['avg_rating'] = meta['avg_rating'].round(1)
+    meta['deskripsi'] = meta['deskripsi'].fillna(value="")
+
+    trend['count_tempat'] = trend['count_tempat'].apply(convert_int)
+    meta['tempat'] = meta['tempat'].str.title()
+    # left join
+    meta = pd.merge(meta,trend,on='tempat',how='left')
+    meta['avg_rating'] = meta['avg_rating'].fillna(0)
+    meta['avg_rating'] = meta['avg_rating'].round(1)
+
+    
+    return meta
 
 
-#proses tfid
-tf = TfidfVectorizer(analyzer='word',ngram_range=(1, 2),min_df=0, stop_words='english')
-# tfidf_matrix = tf.fit_transform(meta['features'])
-tfidf_matrix = tf.fit_transform(meta['features'].values.astype('U'))
-# # print(tfidf_matrix.shape)
-
-#cosine similarity
-cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
-
-meta = meta.reset_index()
-tempats = meta['tempat']
-indices = pd.Series(meta.index, index=meta['tempat'])
 
 
 # # # print(store.info())
@@ -123,7 +114,7 @@ app.secret_key = "@adenjmn"
 
 @app.route("/")
 def home():
-    arr_meta = meta.values.tolist()
+    arr_meta = meta_data().values.tolist()
     
     if 'id_user' in session:
         msg = "Berhasil masuk"
@@ -136,8 +127,74 @@ def home():
     else:
         return render_template('index.html', _meta=arr_meta)
 
-@app.route('/masuk')
-def masuk():
+@app.route('/admin')
+def admin():
+    meta = meta_data()
+    # destination = pd.DataFrame(result_meta,columns= ['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi'])
+    # destination = destination[['tempat','jenis','kota']]
+    # recent
+    ad_recent = meta.tail()
+    _ad_recent = ad_recent.values.tolist()
+
+    data = meta[['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi']]
+    # by trend
+    # new_data = pd.merge(data,trend,on='tempat',how='left')
+    # new_data['avg_rating'] = new_data['avg_rating'].fillna(0)
+    # new_data['avg_rating'] = new_data['avg_rating'].round(1)
+    # new_data = new_data.dropna(subset=['jenis'])
+    ad_trend = meta.sort_values(by='count_tempat',ascending=False).head(10)
+    _ad_trend = ad_trend.values.tolist()
+
+    # by rating
+    ad_rating = meta.sort_values(by='avg_rating',ascending=False).head(10)
+    _ad_rating = ad_rating.values.tolist()
+    return render_template('admin/index.html',ad_recent = _ad_recent,ad_trend=_ad_trend,ad_rating=_ad_rating)
+
+@app.route('/admin/destination')
+def admin_place():
+    destination = pd.DataFrame(result_meta,columns= ['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi'])
+    destination = destination[['tempat','jenis','kota']]
+    _destination = destination.values.tolist()
+
+    return render_template('admin/destination.html', destination=_destination)
+@app.route('/admin/destination/<place>')
+def admin_select(place=None):
+    meta = meta_data()
+    place = place.title()
+    select_wisata = meta.loc[meta['tempat']==place]
+    _destination = select_wisata.values.tolist()
+    return render_template('admin/detail.html', destination=_destination)
+
+@app.route('/admin/add_destination')
+def new_destination():
+    return render_template('admin/add_destination.html')
+
+@app.route('/admin/add_destination/new', methods=["POST","GET"])
+def submit_destination():
+    if request.method == 'POST':
+        id_tempat = request.form['id']
+        name = request.form['name']
+        type_destination = request.form['type']
+        link_img = request.form['img']
+        description = request.form['desc']
+        latitude = request.form['lat']
+        longitude = request.form['lon']
+        city = request.form['city']
+     
+        con = sqlite3.connect('../../tugas-akhir.db')
+        cursor = con.cursor()
+        cursor.execute('INSERT INTO data(tempat,jenis,img,coo1,coo2,city,description,id_tempat) values (?,?,?,?,?,?,?,?)', (name, type_destination, link_img, latitude, longitude,city, description, id_tempat))
+        con.commit()
+        coordinate = latitude+","+longitude
+        # sql_meta = "SELECT id_tempat,jenis, coordinat, tempat,city,img, description FROM data"
+        add_places = id_tempat, type_destination, coordinate,name, city, link_img, description, 
+        result_meta.append(add_places)
+        # df2 = {'Name': 'Amy', 'Maths': 89, 'Science': 93}
+        # df = df.append(df2, ignore_index = True)
+        return redirect(url_for('admin'))
+
+@app.route('/signin')
+def signin():
     return render_template('login.html')
 
 @app.route('/signup')
@@ -192,12 +249,12 @@ def profile():
         
         return render_template('profile.html' , profil=user, history=history,n_history=n_history)
     else:
-        return redirect(url_for('masuk'))
+        return redirect(url_for('signin'))
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('masuk'))
+    return redirect(url_for('signin'))
 
 @app.route('/ulas', methods=["POST", "GET"])
 def ulasan():
@@ -232,10 +289,25 @@ def ulasan():
     
         return redirect(url_for('profile'))
     else:
-        return redirect(url_for('masuk'))
+        return redirect(url_for('signin'))
 
 @app.route('/recs/<tempat>')
 def rekomendasi(tempat):
+    meta = meta_data()
+    meta['features'] = meta['jenis']+meta['deskripsi']
+    # meta['features'] = meta['jenis']
+    #proses tfid
+    tf = TfidfVectorizer(analyzer='word',ngram_range=(1, 2),min_df=0, stop_words='english')
+    # tfidf_matrix = tf.fit_transform(meta['features'])
+    tfidf_matrix = tf.fit_transform(meta['features'].values.astype('U'))
+    # # print(tfidf_matrix.shape)
+
+    #cosine similarity
+    cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+
+    meta = meta.reset_index()
+    tempats = meta['tempat']
+    indices = pd.Series(meta.index, index=meta['tempat'])
     conn = sqlite3.connect('../../tugas-akhir.db')
     cursor = conn.cursor()
     # collaborative
@@ -266,9 +338,9 @@ def rekomendasi(tempat):
 
     # cross_validate(svd_model, data_ratings, measures=['RMSE', 'MAE'], cv=5, verbose=True)
     # trainset = data_ratings.build_full_trainset()
-    trainset, testset = train_test_split(data_ratings, test_size=0.25)
+    trainset, testset = train_test_split(data_ratings, test_size=0.20)
     svd_model.fit(trainset)
-    svd_predictions = svd_model.test(testset)
+    # svd_predictions = svd_model.test(testset)
 
     # hybrid filtering
 
@@ -300,18 +372,20 @@ def rekomendasi(tempat):
     wisata_id = store.loc[tempat]['id_tempat_rating']
     sim_scores = list(enumerate(cosine_sim[int(idx)]))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    sim_scores = sim_scores[1:20]
+    sim_scores = sim_scores[1:40]
 
     wisata_indices = [i[0] for i in sim_scores]
     # print('wi = ',wisata_indices)
     wisatas = meta.iloc[wisata_indices][['tempat', 'features','id_tempat','id_tempat_rating','jenis','kota','avg_rating','src_img','deskripsi']]
     wisatas = wisatas.merge(cities, how="left", on=["tempat"])
     wisatas = wisatas.sort_values(by='Distance', ascending=True)
-    wisatas = wisatas.head(15)
+    wisatas = wisatas.head(20)
+    # print(wisatas.head(15))
     try:
         wisatas['est'] = wisatas['id_tempat'].apply(lambda x: svd_model.predict(userId, x).est)
         wisatas = wisatas.sort_values('est', ascending=False)
         print('HF active')
+        # print(wisatas.head(15))
     except:
         print('Non-HF active')
         # pass
@@ -394,14 +468,17 @@ def rekomendasi(tempat):
 @app.route("/destinasi/")
 @app.route("/destinasi/<filter>")
 def explore(filter = None):
+    meta = meta_data()
     locale = cities.sort_values(by='Distance', ascending=True)
-    data = locale.merge(meta[['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi']],how="left", on=["tempat"])
-    new_data = pd.merge(data,trend,on='tempat',how='left')
-    new_data['avg_rating'] = new_data['avg_rating'].fillna(0)
-    new_data['avg_rating'] = new_data['avg_rating'].round(1)
-    new_data = new_data.dropna(subset=['jenis'])
+    data = locale.merge(meta,how="left", on=["tempat"])
+    # new_data = pd.merge(data,trend,on='tempat',how='left')
+    # new_data['avg_rating'] = new_data['avg_rating'].fillna(0)
+    # new_data['avg_rating'] = new_data['avg_rating'].round(1)
+    new_data = data.dropna(subset=['jenis'])
     # print(new_data.info())
-    
+    # meta = pd.merge(meta,trend,on='tempat',how='left')
+    # meta['avg_rating'] = meta['avg_rating'].fillna(0)
+    # meta['avg_rating'] = meta['avg_rating'].round(1)
     _data = new_data.values.tolist()
 
     if 'id_user' in session:

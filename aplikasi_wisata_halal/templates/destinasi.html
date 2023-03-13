@@ -65,9 +65,13 @@
             {% endfor %}
             <div class="col-lg-3 col-6 text-right">
                 {% if not session.id_user %}
-                <a href="/masuk" class="btn border">
+                <a href="/signup" class="btn border">
                     <i class="fas fa-user text-info"></i>
-                    <span class="badge">Sign In</span>
+                    <span class="badge">Sign Up</span>
+                </a>
+                <a href="/signin" class="btn border">
+                    <i class="fas fa-user text-info"></i>
+                    <span class="badge">Login</span>
                 </a>
                 {% else %}
                 <div class="dropdown">
@@ -140,7 +144,7 @@
                     <div class="card__overlay">        
                         <div class="card__header">
                             <p bg-black class="flex-fill">{{ d[0] }}</p>
-                            <p bg-grey class="flex-fill"><i class="fas fa-star"></i> {{ d[12] }} ({{ d[11]|round|int }})</p>
+                            <p bg-grey class="flex-fill"><i class="fas fa-star"></i> {{ d[13] }} ({{ d[12]|round|int }})</p>
                             <!-- {% if filter == 'terdekat' %}
                                 <p bg-grey title="jarak"><i class="fas fa-tachometer-alt"></i> {{ d[4] }} km</p>
                             {% elif filter == 'populer' %}
