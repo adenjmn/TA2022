@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Admin - Wisata Halal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css'>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css'>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}">
 
@@ -21,7 +21,7 @@
   <nav id="sidenav">
     <div id="sidenav-header">
       <div id="profile-picture">
-      	<img src="http://www.gravatar.com/avatar/fa4df8540bab3cb38f7dfa60c6e0522c.png"/>
+      	<img src="{{ url_for('static', filename='img/admin.png') }}"/>
       </div>
       <a href="#" id="profile-link">Jesse Couch</a>
     </div>
@@ -32,19 +32,25 @@
     <ul id="main-nav">
       <li class="active">
         <a href="#">
-          <i class="fa fa-tachometer"></i>
+          <i class="fa fa-home"></i>
           Dashboard
         </a>
       </li>
       <li>
         <a href="/admin/destination">
-          <i class="fa fa-check-square-o"></i>
+          <i class="fa fa-landmark"></i>
           Destination
         </a>
       </li>
       <li>
-        <a href="#">
-          <i class="fa fa-user"></i>
+        <a href="/admin/place">
+          <i class="fa fa-place-of-worship"></i>
+          place
+        </a>
+      </li>
+      <li>
+        <a href="/admin/member">
+          <i class="fa fa-user-lock"></i>
           Admin
         </a>
       </li>

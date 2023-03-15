@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Wisata Halal</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css'>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}">
+
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+
+  <body>
+    <div id="menu-overlay"></div>
+    <div id="menu-toggle" class="closed" data-title="Menu">
+      <i class="fa fa-bars"></i>
+      <i class="fa fa-times"></i>
+    </div>
+    <header id="main-header">
+      <nav id="sidenav">
+        <div id="sidenav-header">
+          <div id="profile-picture">
+            <img src="{{ url_for('static', filename='img/admin.png') }}"/>
+          </div>
+          <a href="#" id="profile-link">Jesse Couch</a>
+        </div>
+        <div id="account-actions">
+          <a href="" data-title="Home"><i class="fa fa-home"></i></a>
+          <!-- <a href="#" id="messages" data-title="Messages" data-newmessages="1"><i class="fa fa-inbox"></i></a> -->
+          <a href="#" data-title="Logout"><i class="fa fa-cog"></i></a>
+        </div>
+        <ul id="main-nav">
+          <li>
+            <a href="../admin">
+              <i class="fa fa-home"></i>
+              Dashboard
+            </a>
+          </li>
+          <li class="active">
+            <a href="/admin/destination">
+              <i class="fa fa-landmark"></i>
+              Destination
+            </a>
+          </li>
+          <li>
+            <a href="/admin/place">
+              <i class="fa fa-place-of-worship"></i>
+              place
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="fa fa-user-lock"></i>
+              Admin
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </header>
+    <section id="content" class="form-style">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="../destination">Destination</a></li>
+          {% for i in destination %}
+          <li class="breadcrumb-item active" aria-current="page">{{i[3]}}</li>
+          {% endfor %}
+        </ol>
+      </nav>
+
+      {% for i in destination %}
+      <img src="{{ i[5] }}" alt="" class="fimage" />
+      <form action="/admin/destination/{{i[3]}}/update" method="POST">
+        <input class="form-control form-control-sm" value="{{i[0]}}" name="id" type="hidden"
+          placeholder=".form-control-sm" aria-label=".form-control-sm example">
+        <div class="section"><span>1</span>Destination</div>
+        <div class="inner-wrap">
+          <label class="name" id="name" for="name">Name</label>
+          <input class="form-control form-control-sm" value="{{i[3]}}" name="name" type="text"
+            placeholder=".form-control-sm" aria-label=".form-control-sm example" disabled>
+          <label class="type" id="type" for="type">Type</label>
+          <input class="form-control form-control-sm" value="{{i[1]}}" name="type" type="text"
+            placeholder=".form-control-sm" aria-label=".form-control-sm example">
+          <label class="img" id="img" for="img">Link Image</label>
+          <input class="form-control form-control-sm" value="{{i[5]}}" name="img" type="text"
+            aria-label=".form-control-sm example">
+          <label class="desc" id="desc" for="desc">Description</label>
+          <textarea class="form-control form-control-sm" name="desc" rows="4">{{i[6]}}</textarea>
+        </div>
+        <div class="section"><span>2</span>Location - City &amp; Coordinate</div>
+        <div class="inner-wrap">
+          <label class="city" id="city" for="city">City</label>
+          <input class="form-control form-control-sm" value="{{i[4]}}" name="city" type="text"
+            placeholder=".form-control-sm" aria-label=".form-control-sm example">
+        </div>
+        <div class="inner-wrap">
+          <label class="coordinate" id="coordinate" for="coordinate">Coordinate</label>
+          <div id="mapCanvas" class="inner-wrap"></div>
+          <b>Latitude:</b>
+          <div id="info_lat"></div>
+          <b>Longitude:</b>
+          <div id="info_lon"></div>
+          <input class="form-control form-control-sm" name="lat" type="hidden" aria-label=".form-control-sm example">
+          <input class="form-control form-control-sm" name="lon" type="hidden" aria-label=".form-control-sm example">
+        </div>
+        <div class="section"><span>3</span>Action</div>
+        <div class="section"><button type="submit" class="btn btn-primary">UPDATE</button></div>
+      </form>
+      <div class="section">
+        <a href="/admin/destination/{{ i[0] }}/delete" class="btn btn-danger" role="button"
+          onclick="return confirm('Are you sure you want to delete?');">DELETE</a></td>
+      </div>
+      {% endfor %}
+
+    </section>
+
+    <footer></footer>
+    <!-- </body> -->
+    <!-- partial -->
+
+
+
+    <script src="{{ url_for('static', filename='js/admin_destination.js') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="{{ url_for('static', filename='js/maps.js') }}"></script>
+
+    <!-- <script type="text/javascript">
+      
+    </script> -->
+
+  </body>
+
+</html>

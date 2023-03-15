@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Wisata Halal</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css'>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}">
+
+</head>
+
+<body>
+  <body>
+    <div id="menu-overlay"></div>
+    <div id="menu-toggle" class="closed" data-title="Menu">
+      <i class="fa fa-bars"></i>
+      <i class="fa fa-times"></i>
+    </div>
+    <header id="main-header">
+      <nav id="sidenav">
+        <div id="sidenav-header">
+          <div id="profile-picture">
+            <img src="{{ url_for('static', filename='img/admin.png') }}"/>
+          </div>
+          <a href="#" id="profile-link">Jesse Couch</a>
+        </div>
+        <div id="account-actions">
+          <a href="" data-title="Home"><i class="fa fa-home"></i></a>
+          <!-- <a href="#" id="messages" data-title="Messages" data-newmessages="1"><i class="fa fa-inbox"></i></a> -->
+          <a href="#" data-title="Logout"><i class="fa fa-cog"></i></a>
+        </div>
+        <ul id="main-nav">
+          <li>
+            <a href="../admin">
+              <i class="fa fa-home"></i>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="/admin/destination">
+              <i class="fa fa-landmark"></i>
+              Destination
+            </a>
+          </li>
+          <li>
+            <a href="/admin/place">
+              <i class="fa fa-place-of-worship"></i>
+              place
+            </a>
+          </li>
+          <li class="active">
+            <a href="/admin/member">
+              <i class="fa fa-user-lock"></i>
+              Admin
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </header>
+    <section id="content" class="form-style">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="destination" style="text-decoration:none">Destination</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+      </nav>
+
+      <form action="/admin/add_member/new" method="POST">
+        <div class="section">Create your Account</div>
+        <div class="inner-wrap">
+          <label class="id" id="id" for="id">ID USER</label>
+          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example">
+          <label class="name" id="name" for="name">Name</label>
+          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example">
+          <label>Password</label>
+          <input class="form-control form-control-sm" value="" name="password" type="password" aria-label=".form-control-sm example" autocomplete="off" required>
+          <label class="desc" id="desc" for="desc">Description</label>
+          <textarea class="form-control form-control-sm" name="desc" rows="4"></textarea>
+        </div>
+        <div class="section"><button type="submit" class="btn btn-primary">Submit</button></div>
+      </form>
+    </section>
+
+    <footer></footer>
+
+    <script src="{{ url_for('static', filename='js/admin_destination.js') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="{{ url_for('static', filename='js/maps.js') }}"></script>
+
+  </body>
+
+</html>

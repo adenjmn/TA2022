@@ -37,7 +37,7 @@ function generateAppList(event) {
 
   if (filteredList.length === 0) {
     let paragraph = document.createElement('p');
-    paragraph.innerText = 'No app found';
+    paragraph.innerText = 'No items matched your search';
     fragment.appendChild(paragraph);
   }
 
