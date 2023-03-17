@@ -3,7 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Wisata Halal</title>
+    {% for i in destination %}
+    <title>{{i[3]}} - Admin - Wisata Halal</title>
+    {% endfor %}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -26,7 +28,7 @@
             <nav id="sidenav">
                 <div id="sidenav-header">
                     <div id="profile-picture">
-                        <img src="{{ url_for('static', filename='img/admin.png') }}"/>
+                        <img src="{{ url_for('static', filename='img/admin.png') }}" />
                     </div>
                     <a href="#" id="profile-link">Jesse Couch</a>
                 </div>
@@ -60,6 +62,12 @@
                             Admin
                         </a>
                     </li>
+                    <li>
+                        <a href="/logout">
+                          <i class="fa fa-sign-out-alt"></i>
+                          Logout
+                        </a>
+                      </li>
                 </ul>
             </nav>
         </header>
@@ -100,8 +108,10 @@
                     <div id="info_lat"></div>
                     <b>Longitude:</b>
                     <div id="info_lon"></div>
-                    <input class="form-control form-control-sm" name="lat" type="hidden" aria-label=".form-control-sm example">
-                    <input class="form-control form-control-sm" name="lon" type="hidden" aria-label=".form-control-sm example">
+                    <input class="form-control form-control-sm" name="lat" type="hidden"
+                        aria-label=".form-control-sm example">
+                    <input class="form-control form-control-sm" name="lon" type="hidden"
+                        aria-label=".form-control-sm example">
                 </div>
                 <div class="section"><span>3</span>Action</div>
                 <div class="section"><button type="submit" class="btn btn-primary">UPDATE</button></div>

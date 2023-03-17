@@ -39,11 +39,8 @@ def metadata():
     meta = pd.DataFrame(result_meta,columns= ['id_tempat','jenis','coordinat','tempat','kota','src_img','deskripsi'])
     meta = meta.dropna(subset=['jenis'])
 
-    # xid_city = meta['kota']
-
     conn = sqlite3.connect('../../tugas-akhir.db')
     cursor = conn.cursor()
-
     sql_trend = "SELECT tempatR, COUNT(*), AVG(rating) FROM ratings GROUP BY tempatR"
     cursor.execute(sql_trend)
     result_trend = cursor.fetchall()
@@ -110,19 +107,30 @@ def find_distance():
     cities['Distance'] = distances_km
     return cities
 
-
 def check_user(id_user, password):
-    con = sqlite3.connect('../../tugas-akhir.db')
-    cur = con.cursor()
-    cur.execute('Select id_user,password FROM user WHERE id_user=? and password=?', (id_user, password))
-
-    result = cur.fetchone()
+    cursor = koneksi()
+    cursor.execute('Select id_user,password,status FROM user WHERE id_user=? and password=?', (id_user, password))
+    result = cursor.fetchone()
     if result:
-        return True
+        if result[2]=='Admin':
+            status = "Admin"
+            return status
+        else:
+            status = "User"
+            return status
+        # return True
     else:
         return False
-# 105496414599981678036
-# newacc123
+
+def find_admin(userId):
+    cursor = koneksi()
+    cursor.execute('Select id_user,nama_pengguna,password,status FROM user WHERE id_user=?', (userId,))
+    user = cursor.fetchall()
+    if user[0][3]=='Admin':
+        return user
+    else:
+        return False
+
 app = Flask(__name__)
 app.secret_key = "@adenjmn"
 
@@ -143,44 +151,70 @@ def home():
 
 @app.route('/admin')
 def admin():
-    meta = metadata()
-    # by recent
-    ad_recent = meta.tail().sort_index(ascending=False)
-    _ad_recent = ad_recent.values.tolist()
-
-    data = meta[['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi']]
-    # by trend
-    ad_trend = meta.sort_values(by='count_tempat',ascending=False).head(10)
-    _ad_trend = ad_trend.values.tolist()
-
-    # by rating
-    ad_rating = meta.sort_values(by='avg_rating',ascending=False).head(10)
-    _ad_rating = ad_rating.values.tolist()
-
-    return render_template('admin/index.html',ad_recent = _ad_recent,ad_trend=_ad_trend,ad_rating=_ad_rating)
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            user = find_admin(userId)
+            meta = metadata()
+            # by recent
+            ad_recent = meta.tail().sort_index(ascending=False)
+            _ad_recent = ad_recent.values.tolist()
+            data = meta[['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi']]
+            # by trend
+            ad_trend = meta.sort_values(by='count_tempat',ascending=False).head(10)
+            _ad_trend = ad_trend.values.tolist()
+            # by rating
+            ad_rating = meta.sort_values(by='avg_rating',ascending=False).head(10)
+            _ad_rating = ad_rating.values.tolist()
+            return render_template('admin/index.html',ad_recent = _ad_recent,ad_trend=_ad_trend,ad_rating=_ad_rating,user=user)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
 @app.route('/admin/destination')
 def admin_place():
-    destination = metadata()
-    destination = destination[['tempat','jenis','kota']]
-    _destination = destination.values.tolist()
-
-    return render_template('admin/destination/index.html', destination=_destination)
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            user = find_admin(userId)
+            destination = metadata()
+            destination = destination[['tempat','jenis','kota']]
+            _destination = destination.values.tolist()
+            return render_template('admin/destination/index.html', destination=_destination,user=user)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 @app.route('/admin/destination/<place>')
 def admin_select(place=None):
-    meta = metadata()
-    # place = place.title()
-    select_wisata = meta.loc[meta['tempat']==place]
-    _destination = select_wisata.values.tolist()
-    # print(select_wisata.head())
-    return render_template('admin/destination/detail.html', destination=_destination)
-
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            user = find_admin(userId)
+            meta = metadata()
+            # place = place.title()
+            select_wisata = meta.loc[meta['tempat']==place]
+            _destination = select_wisata.values.tolist()
+            return render_template('admin/destination/detail.html', destination=_destination)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 @app.route('/admin/add_destination')
 def new_destination():
-    cursor = koneksi()
-    cursor.execute('SELECT DISTINCT jenis FROM data ORDER BY jenis')
-    types = cursor.fetchall()
-    return render_template('admin/destination/add_destination.html',types=types)
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            user = find_admin(userId)
+            cursor = koneksi()
+            cursor.execute('SELECT DISTINCT jenis FROM data ORDER BY jenis')
+            types = cursor.fetchall()
+            return render_template('admin/destination/add_destination.html',types=types)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
 @app.route('/admin/add_destination/new', methods=["POST","GET"])
 def submit_destination():
@@ -193,38 +227,37 @@ def submit_destination():
         latitude = request.form['lat']
         longitude = request.form['lon']
         city = request.form['city']
-     
         con = sqlite3.connect('../../tugas-akhir.db')
         cursor = con.cursor()
         cursor.execute('INSERT INTO data(tempat,jenis,img,coo1,coo2,city,description,id_tempat) values (?,?,?,?,?,?,?,?)', (name, type_destination, link_img, latitude, longitude,city, description, id_tempat))
         con.commit()
-        # coordinate = latitude+","+longitude
-        
-        # add_places = id_tempat, type_destination, coordinate,name, city, link_img, description, 
-        # result_meta.append(add_places)
-        # df2 = {'Name': 'Amy', 'Maths': 89, 'Science': 93}
-        # df = df.append(df2, ignore_index = True)
         return redirect(url_for('admin'))
 
 @app.route('/admin/destination/<place>/update', methods=["POST","GET"])
 def update_place(place=None):
-    if request.method == 'POST':
-        id_tempat = request.form['id']
-        type_destination = request.form['type']
-        city = request.form['city']
-        link_img = request.form['img']
-        description = request.form['desc']
-        latitude = request.form['lat']
-        longitude = request.form['lon']
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            if request.method == 'POST':
+                id_tempat = request.form['id']
+                type_destination = request.form['type']
+                city = request.form['city']
+                link_img = request.form['img']
+                description = request.form['desc']
+                latitude = request.form['lat']
+                longitude = request.form['lon']
 
-        con = sqlite3.connect('../../tugas-akhir.db')
-        cursor = con.cursor()
-        # UPDATE data SET jenis = 'Smith' WHERE id_tempat = 6699;
-        cursor.execute('UPDATE data SET jenis=?,img=?,coo1=?,coo2=?,city=?,description=? WHERE id_tempat=?', (type_destination, link_img, latitude, longitude,city, description,id_tempat))
-        con.commit()
-        con.close()
-
-        return redirect(url_for('admin_place'))
+                con = sqlite3.connect('../../tugas-akhir.db')
+                cursor = con.cursor()
+                # UPDATE data SET jenis = 'Smith' WHERE id_tempat = 6699;
+                cursor.execute('UPDATE data SET jenis=?,img=?,coo1=?,coo2=?,city=?,description=? WHERE id_tempat=?', (type_destination, link_img, latitude, longitude,city, description,id_tempat))
+                con.commit()
+                con.close()
+                return redirect(url_for('admin_place'))
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
 @app.route('/admin/destination/<id_place>/delete', methods=["POST","GET"])
 def delete_destination(id_place):
@@ -238,20 +271,42 @@ def delete_destination(id_place):
 
 @app.route('/admin/place')
 def halalan():
-    halal = meta_halal()
-    _halal = halal.values.tolist()
-    return render_template('admin/halal/index.html', halal=_halal)
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            user = find_admin(userId)
+            halal = meta_halal()
+            _halal = halal.values.tolist()
+            return render_template('admin/halal/index.html', halal=_halal,user=user)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
 @app.route('/admin/place/<place>')
 def admin_select_halal(place=None):
-    halal = meta_halal()
-    select_halal = halal.loc[halal['tempat']==place]
-    _place = select_halal.values.tolist()
-    return render_template('admin/halal/detail.html', place=_place)
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            halal = meta_halal()
+            select_halal = halal.loc[halal['tempat']==place]
+            _place = select_halal.values.tolist()
+            return render_template('admin/halal/detail.html', place=_place)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
 @app.route('/admin/add_place')
 def new_place():
-    return render_template('admin/halal/add.html')
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            return render_template('admin/halal/add.html')
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
 @app.route('/admin/add_place/new', methods=["POST","GET"])
 def submit_place():
@@ -286,39 +341,87 @@ def delete_place(id_place):
 
 @app.route('/admin/member')
 def member():
-    cursor = koneksi()
-    status = 'admin'
-    cursor.execute('SELECT * FROM user WHERE status=? order by status',(status,))
-    member = cursor.fetchall()
-    return render_template('admin/member/index.html', member=member)
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            user = find_admin(userId)
+            cursor = koneksi()
+            status = 'Admin'
+            cursor.execute('SELECT * FROM user WHERE status=? order by status',(status,))
+            member = cursor.fetchall()
+            return render_template('admin/member/index.html', member=member,user=user)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
-@app.route('/admin/member/<user>')
-def admin_select_member(place=None):
-    halal = meta_halal()
-    select_halal = halal.loc[halal['tempat']==place]
-    _place = select_halal.values.tolist()
-    return render_template('admin/member/detail.html', place=_place)
+@app.route('/admin/member/<id>')
+def admin_select_member(id=None):
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            cursor = koneksi()
+            cursor.execute('SELECT * FROM user WHERE id_user=?',(id,))
+            user = cursor.fetchall()
+            return render_template('admin/member/detail.html', user=user)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
 
 @app.route('/admin/add_member')
 def new_member():
-    return render_template('admin/member/add.html')
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            return render_template('admin/member/add.html')
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
+
+@app.route('/admin/member/<place>/update', methods=["POST","GET"])
+def update_member(place=None):
+    if 'id_user' in session:
+        userId = session["id_user"]
+        if find_admin(userId):
+            if request.method == 'POST':
+                name = request.form['name']
+                password = request.form['password']
+              
+                con = sqlite3.connect('../../tugas-akhir.db')
+                cursor = con.cursor()
+                # UPDATE data SET jenis = 'Smith' WHERE id_tempat = 6699;
+                cursor.execute('UPDATE user SET nama_pengguna=?,password=? WHERE id_user=?', (name,password,userId))
+                con.commit()
+                con.close()
+                return redirect(url_for('member'))
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('signin'))
+
+@app.route('/admin/member/<id>/delete', methods=["POST","GET"])
+def delete_member(id):
+    if request.method == 'GET':
+        con = sqlite3.connect('../../tugas-akhir.db')
+        cursor = con.cursor()
+        cursor.execute('DELETE FROM	user WHERE id_user = ?', (id,))
+        con.commit()
+        con.close()
+        return redirect(url_for('member'))
 
 @app.route('/admin/add_member/new', methods=["POST","GET"])
 def submit_member():
     if request.method == 'POST':
-        # id_tempat = request.form['id']
-        # name = request.form['name']
-        # types = request.form['type']
-        # link_img = request.form['img']
-        # description = request.form['desc']
-        # latitude = request.form['lat']
-        # longitude = request.form['lon']
-        # address = request.form['address']
-        # print(types,address)
-        # con = sqlite3.connect('../../tugas-akhir.db')
-        # cursor = con.cursor()
-        # cursor.execute('INSERT INTO support_place(tempat,type,img,latitude,longitude,address,deskripsi) values (?,?,?,?,?,?,?)', (name, types, link_img, latitude, longitude,address, description))
-        # con.commit()    
+        id_user = request.form['id']
+        name = request.form['name']
+        password = request.form['password']
+        status = 'Admin'
+        con = sqlite3.connect('../../tugas-akhir.db')
+        cursor = con.cursor()
+        cursor.execute('INSERT INTO user(id_user, nama_pengguna,status,password) values (?,?,?,?)', (id_user,name,status,password))
+        con.commit()    
         return redirect(url_for('member'))
     else:
         print("ERROR")
@@ -358,9 +461,13 @@ def login():
     if request.method == 'POST':
         id_user = request.form['id_user']
         password = request.form['password']
-        if check_user(id_user, password):
+        print(check_user(id_user, password))
+        if check_user(id_user, password)=='User':
             session['id_user'] = id_user
             return redirect(url_for('home'))
+        elif check_user(id_user, password)=='Admin':
+            session['id_user'] = id_user
+            return redirect(url_for('admin'))
         else:
             msg = ['Sorry, your password was incorrect. Please double-check your password.']
             return render_template('login.html',msg=msg)

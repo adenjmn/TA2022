@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Destination - Admin - Wisata Halal</title>
+  <title>Member - Admin - Wisata Halal</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -16,8 +16,6 @@
 </head>
 
 <body>
-  <!-- partial:index.partial.html -->
-
   <body>
     <div id="menu-overlay"></div>
     <div id="menu-toggle" class="closed" data-title="Menu">
@@ -30,7 +28,9 @@
           <div id="profile-picture">
             <img src="{{ url_for('static', filename='img/admin.png') }}"/>
           </div>
-          <a href="#" id="profile-link">Jesse Couch</a>
+          {% for i in user %}
+          <a href="#" id="profile-link">{{i[1]}}</a>
+          {% endfor %}
         </div>
         <div id="account-actions">
           <a href="" data-title="Home"><i class="fa fa-home"></i></a>
@@ -62,6 +62,12 @@
               Admin
             </a>
           </li>
+          <li>
+            <a href="/logout">
+              <i class="fa fa-sign-out-alt"></i>
+              Logout
+            </a>
+          </li>
         </ul>
       </nav>
 
@@ -69,16 +75,15 @@
     <section id="content">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item active" aria-current="page">member</li>
+          <li class="breadcrumb-item active" aria-current="page">Member</li>
         </ol>
       </nav>
       <a class="btn btn-outline-primary add_destination" href="./add_member" role="button">+ add member</a>
       <table id="example" class="table table-striped table-bordered nowrap display" style="width:100%">
         <thead>
           <tr>
+            <th>Id</th>
             <th>Name</th>
-            <th>Type</th>
-            <th>City</th>
             <th></th>
           </tr>
         </thead>
@@ -88,7 +93,6 @@
           <tr>
             <td>{{ i[0] }}</td>
             <td>{{ i[1] }}</td>
-            <td>{{ i[2] }}</td>
             <td><a href="member/{{i[0]}}">detail</a></td>
           </tr>
           {% endfor %}

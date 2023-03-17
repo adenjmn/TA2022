@@ -30,7 +30,9 @@
           <div id="profile-picture">
             <img src="{{ url_for('static', filename='img/admin.png') }}"/>
           </div>
-          <a href="#" id="profile-link">Jesse Couch</a>
+          {% for i in user %}
+          <a href="#" id="profile-link">{{i[1]}}</a>
+          {% endfor %}
         </div>
         <div id="account-actions">
           <a href="" data-title="Home"><i class="fa fa-home"></i></a>
@@ -57,9 +59,15 @@
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="/admin/member">
               <i class="fa fa-user-lock"></i>
               Admin
+            </a>
+          </li>
+          <li>
+            <a href="/logout">
+              <i class="fa fa-sign-out-alt"></i>
+              Logout
             </a>
           </li>
         </ul>
