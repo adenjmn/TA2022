@@ -14,6 +14,7 @@
 </head>
 
 <body>
+
   <body>
     <div id="menu-overlay"></div>
     <div id="menu-toggle" class="closed" data-title="Menu">
@@ -24,7 +25,7 @@
       <nav id="sidenav">
         <div id="sidenav-header">
           <div id="profile-picture">
-            <img src="{{ url_for('static', filename='img/admin.png') }}"/>
+            <img src="{{ url_for('static', filename='img/admin.png') }}" />
           </div>
           <a href="#" id="profile-link">Jesse Couch</a>
         </div>
@@ -80,13 +81,15 @@
         <div class="section"><span>1</span>Place by Halal</div>
         <div class="inner-wrap">
           <label class="id" id="id" for="id">ID Destination</label>
-          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example">
+          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example"
+            autocomplete="off" required>
 
           <label class="name" id="name" for="name">Name</label>
-          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example">
+          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example"
+            autocomplete="off" required>
 
           <label class="type" id="type" for="type">Type</label>
-          <select class="form-select" multiple aria-label="multiple select" name="type" id="type" >
+          <select class="form-select" multiple aria-label="multiple select" name="type" id="type" required>
             <option value="Mosque">Mosque</option>
             <option value="Restaurants">Restaurants</option>
             <option value="Hotel">Hotel</option>
@@ -94,16 +97,17 @@
           </select>
           <label class="img" id="img" for="img"></label>
           <label class="img" id="img" for="img">Link Image</label>
-          <input class="form-control form-control-sm" value="" name="img" type="text" aria-label=".form-control-sm example">
+          <input class="form-control form-control-sm" value="" name="img" type="text"
+            aria-label=".form-control-sm example" autocomplete="off" required>
 
           <label class="desc" id="desc" for="desc">Description</label>
-          <textarea class="form-control form-control-sm" name="desc" rows="4"></textarea>
+          <textarea class="form-control form-control-sm" name="desc" rows="4" autocomplete="off" required></textarea>
         </div>
         <div class="section"><span>2</span>Location - Address &amp; Coordinate</div>
         <div class="inner-wrap">
           <label class="address" id="address" for="address">Address</label>
           <input class="form-control form-control-sm" value="" name="address" type="text"
-            aria-label=".form-control-sm example">
+            aria-label=".form-control-sm example" autocomplete="off" required>
         </div>
         <div class="inner-wrap">
           <label class="coordinate" id="coordinate" for="coordinate">Coordinate</label>

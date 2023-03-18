@@ -104,6 +104,10 @@
                                         <p>POINTS : {{ user[3] }}</p>
                                         <span>Status : </span>
                                         <span class="badge badge-success">{{ user[10] }} </span>
+                                        <hr>
+                                        {% if user[10] == 'Admin' %}
+                                        <a class="btn btn-primary" href="/admin">Admin Menu</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

@@ -34,66 +34,78 @@
     <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row align-items-center py-3 px-xl-5">
-            <div class="col-lg-3 d-none d-lg-block">
-                <a href="/" class="text-decoration-none">
-                    <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200">
-                    <!-- <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-success font-weight-bold border px-3 mr-1">H</span>.Travel</h1> -->
-                </a>
-            </div>
-            <div class="col-lg-6 col-6 text-left">
-                <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for Destinasi" id="search"autocomplete="off">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-success">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="suggestion-list hidden" style="color: black;">
-                    </div>
-                </form>
-            </div>
-            {% for list in data %}
-            <div id="apps" hidden>
-                <div class="app">
-                    <!-- <img class="postcard__img" src="{{ list[6] }}" alt="Image Title" />  -->
-                    <i class="fab fa-apple"></i>
-                    <p>{{ list[0] }}</p>
+          <div class="col-lg-3 d-none d-lg-block">
+            <a href="" class="text-decoration-none">
+              <img
+                src="{{ url_for('static', filename='img/name_logo.png') }}"
+                width="200"
+              />
+            </a>
+          </div>
+          <div class="col-lg-6 col-6 text-left">
+            <form action="">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search for Destinasi"
+                  id="search"
+                  autocomplete="off"
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text bg-transparent text-success">
+                    <i class="fa fa-search"></i>
+                  </span>
                 </div>
+              </div>
+              <div class="suggestion-list hidden" style="color: black"></div>
+            </form>
+          </div>
+          {% for list in _meta %}
+          <div id="apps" hidden>
+            <div class="app">
+              <i class="fab fa-apple"></i>
+              <p>{{ list[3] }}</p>
             </div>
-            {% endfor %}
-            <div class="col-lg-3 col-6 text-right">
-                {% if not session.id_user %}
-                <a href="/signup" class="btn border">
-                    <i class="fas fa-user text-info"></i>
-                    <span class="badge">Sign Up</span>
-                </a>
-                <a href="/signin" class="btn border">
-                    <i class="fas fa-user text-info"></i>
-                    <span class="badge">Login</span>
-                </a>
+          </div>
+          {% endfor %}
+          <div class="col-lg-3 col-6 text-right">
+            {% if not session.id_user %}
+            <a href="/signup" class="btn border">
+              <i class="fas fa-user text-info"></i>
+              <span class="badge">Sign Up</span>
+            </a>
+            <a href="/signin" class="btn border">
+              <i class="fas fa-user text-info"></i>
+              <span class="badge">Login</span>
+            </a>
+            {% else %}
+            <div class="dropdown">
+              {% for user in user %}
+              <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if user[1] == 'default' %}
+                <img src ="{{ url_for('static', filename='img/user.jpg') }}"  width="70" class="rounded-circle"              />
+                {% elif user[1] == 'default_admin' %}
+                <img src ="{{ url_for('static', filename='img/admin.png') }}"  width="40" class="rounded-circle"/>
                 {% else %}
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        {% for user in user %}
-                        {% if user[1] == 'default' %}
-                            <img src="{{ url_for('static', filename='img/user.jpg') }}" width="70" class="rounded-circle">
-                        {% else %}
-                            <img src="{{ user[1] }}"  width="40" height="40" class="rounded-circle">
-                        {% endif %}
-                        {% endfor %}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="/user">My Profile</a></li>
-                      <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                    </ul>
-                  </div>
+                <img src ="{{ user[1] }}"  width="40" height="40" class="rounded-circle"              />
                 {% endif %}
+              </button>
+              
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/user">My Profile</a></li>
+                {% if user[2] == 'Admin' %}
+                <li><a class="dropdown-item" href="/admin">Admin Menu</a></li>
+                {% endif %}
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              </ul>
+              {% endfor %}
             </div>
+            {% endif %}
+          </div>
         </div>
-    </div>
-    <!-- Topbar End -->
+      </div>
+      <!-- Topbar End -->
 
 
     <!-- Navbar Start -->

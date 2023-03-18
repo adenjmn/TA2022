@@ -24,7 +24,7 @@
       	<img src="{{ url_for('static', filename='img/admin.png') }}"/>
       </div>
       {% for i in user %}
-      <a href="#" id="profile-link">{{i[1]}}</a>
+      <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
       {% endfor %}
     </div>
     <div id="account-actions">

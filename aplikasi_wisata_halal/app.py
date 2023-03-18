@@ -143,7 +143,7 @@ def home():
         user_id = session["id_user"]
 
         cursor = koneksi()
-        cursor.execute('SELECT id_user,img_src FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
+        cursor.execute('SELECT id_user,img_src,status FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
         user = cursor.fetchall()
         return render_template('index.html', _meta=arr_meta,msg=msg,user=user)
     else:
@@ -196,7 +196,7 @@ def admin_select(place=None):
             # place = place.title()
             select_wisata = meta.loc[meta['tempat']==place]
             _destination = select_wisata.values.tolist()
-            return render_template('admin/destination/detail.html', destination=_destination)
+            return render_template('admin/destination/detail.html', destination=_destination, user=user)
         else:
             return redirect(url_for('home'))
     else:
@@ -288,10 +288,11 @@ def admin_select_halal(place=None):
     if 'id_user' in session:
         userId = session["id_user"]
         if find_admin(userId):
+            user = find_admin(userId)
             halal = meta_halal()
             select_halal = halal.loc[halal['tempat']==place]
             _place = select_halal.values.tolist()
-            return render_template('admin/halal/detail.html', place=_place)
+            return render_template('admin/halal/detail.html', place=_place,user=user)
         else:
             return redirect(url_for('home'))
     else:
@@ -360,6 +361,7 @@ def admin_select_member(id=None):
     if 'id_user' in session:
         userId = session["id_user"]
         if find_admin(userId):
+            user = find_admin(userId)
             cursor = koneksi()
             cursor.execute('SELECT * FROM user WHERE id_user=?',(id,))
             user = cursor.fetchall()
@@ -418,9 +420,10 @@ def submit_member():
         name = request.form['name']
         password = request.form['password']
         status = 'Admin'
+        img_default = 'default_admin'
         con = sqlite3.connect('../../tugas-akhir.db')
         cursor = con.cursor()
-        cursor.execute('INSERT INTO user(id_user, nama_pengguna,status,password) values (?,?,?,?)', (id_user,name,status,password))
+        cursor.execute('INSERT INTO user(id_user, nama_pengguna,status,img_src, password) values (?,?,?,?,?)', (id_user,name,status,img_default,password))
         con.commit()    
         return redirect(url_for('member'))
     else:
@@ -441,6 +444,7 @@ def register():
         id_user = request.form['id_user']
         full_name = request.form['full_name']
         password = request.form['password']
+        status = 'user'
 
         # print((id_user),full_name,password)
 
@@ -450,7 +454,7 @@ def register():
         else:
             con = sqlite3.connect('../../tugas-akhir.db')
             cursor = con.cursor()
-            cursor.execute('INSERT INTO user(nama_pengguna,id_user,password,points,level,img_src) values (?,?,?,?,?,?)', (full_name,id_user, password,0,0,'default'))
+            cursor.execute('INSERT INTO user(nama_pengguna,id_user,password,points,level,n_reviews,img_src,status) values (?,?,?,?,?,?,?)', (full_name,id_user, password,0,0,0,'default',status))
             con.commit()
             con.close()
             session['id_user'] = id_user
@@ -476,7 +480,6 @@ def profile():
     if 'id_user' in session:
         userId = session["id_user"]
         cursor = koneksi()
-        
         cursor.execute('SELECT * FROM user WHERE id_user=? order by id_user limit 1',(userId,))
         user = cursor.fetchall()
 
@@ -597,14 +600,14 @@ def rekomendasi(tempat):
         user_id = session["id_user"]
         userId = session["id_user"]
         cursor = koneksi()
-        cursor.execute('SELECT id_user,img_src FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
+        cursor.execute('SELECT id_user,img_src,status FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
         user = cursor.fetchall()
     else:
         user = ''
 
     idx = indices[tempat]
     # id_tempat = store.loc[tempat]['id_tempat']
-    # print('IDX = ',idx,'\n ID = ',userId,"\n Name Place = ",tempat)
+    # print('IDX = ',idx)
     
     wisata_id = store.loc[tempat]['id_tempat_rating']
     sim_scores = list(enumerate(cosine_sim[int(idx)]))
@@ -617,7 +620,6 @@ def rekomendasi(tempat):
     wisatas = wisatas.merge(cities, how="left", on=["tempat"])
     wisatas = wisatas.sort_values(by='Distance', ascending=True)
     wisatas = wisatas.head(20)
-    # print(wisatas.head(15))
     try:
         wisatas['est'] = wisatas['id_tempat'].apply(lambda x: svd_model.predict(userId, x).est)
         wisatas = wisatas.sort_values('est', ascending=False)
@@ -641,24 +643,16 @@ def rekomendasi(tempat):
     arr_select_wisata = select_wisata.values.tolist()
     arr_meta = search.values.tolist()
     arr_src_reviews = src_reviews.values.tolist()
-    # try:
-    #     arr_select_wisata[0][10] = int(arr_select_wisata[0][10])
-    # except:
-    #     pass
-    # arr_select_wisata[0][10] = nan
     
     kota = arr_select_wisata[0][5]
     halal = meta_halal()
     # print(halal.info())
 
-    
     src_lat = arr_select_wisata[0][3]
-    print("ini lAT=",src_lat)
+    # print("ini lAT=",src_lat)
     src_coordinates = [item.strip() for item in src_lat.split(',')]
     src_latitude = float(src_coordinates[0])
     src_longitude = float(src_coordinates[1])
-    # print("Lan =",src_latitude,"lon = ",src_longitude)
-    # print("TUPE =",type(src_latitude))
     
     start_lat_h, start_lon_h = src_latitude, src_longitude
     
@@ -712,7 +706,7 @@ def explore(filter = None):
     if 'id_user' in session:
         user_id = session["id_user"]
         cursor = koneksi()
-        cursor.execute('SELECT id_user,img_src FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
+        cursor.execute('SELECT id_user,img_src,status FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
         user = cursor.fetchall()
     else:
         user = ''
