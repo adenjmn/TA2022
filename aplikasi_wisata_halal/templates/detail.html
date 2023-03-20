@@ -15,11 +15,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
 <!-- Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-<!-- Libraries Stylesheet -->
-<!-- <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> -->
+
 </head>
 <body>
     <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-chevron-up"></i></button>
@@ -57,7 +55,7 @@
           <div id="apps" hidden>
             <div class="app">
               <i class="fab fa-apple"></i>
-              <p>{{ list[3] }}</p>
+              <p>{{ list[0] }}</p>
             </div>
           </div>
           {% endfor %}
@@ -125,56 +123,56 @@
                                 <div class="product__details__pic">
                                     <div class="product__details__pic__item">
                                         <img class="product__details__pic__item--large"
-                                            src="{{ select[6] }}" alt="">
+                                            src="{{ select[7] }}" alt="">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="container-fluid desc">
                                     
-                                    <h3>{{ select[4] }}</h3>
+                                    <h3>{{ select[5] }}</h3>
 
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <p><i class="fa fa-landmark me-2"></i> {{ select[2] }}</p>
                                         </div>
                                         <div class="col-lg-8">
-                                            <p><i class="fa fa-map-marker-alt me-2"></i> {{ select[5] }}</p>
+                                            <p><i class="fa fa-map-marker-alt me-2"></i> {{ select[6] }}</p>
                                         </div>
                                     </div>
                                     
                                     
                                     <div class="product__details__rating">
-                                        {% if select[10] > 4.5 %}
+                                        {% if select[11] > 4.5 %}
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i><span> {{ select[10] }}</span>
-                                        {% elif select[10] > 3.5  and select[10] <= 4.5 %}
+                                        <i class="fas fa-star"></i><span> {{ select[11] }}</span>
+                                        {% elif select[11] > 3.5  and select[11] <= 4.5 %}
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
-                                        <i class="far fa-star"></i><span> {{ select[10] }}</span>
-                                        {% elif select[10] > 2.5 and select[10] <= 3.5 %}
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
+                                        {% elif select[11] > 2.5 and select[11] <= 3.5 %}
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i><span> {{ select[10] }}</span>
-                                        {% elif select[10] > 1.5 and select[10] <= 2.5  %}
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
+                                        {% elif select[11] > 1.5 and select[11] <= 2.5  %}
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i><span> {{ select[10] }}</span>
-                                        {% elif select[10] > 1 and select[10] <= 1.5  %}
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
+                                        {% elif select[11] > 1 and select[11] <= 1.5  %}
                                         <i class="fas fa-star"></i>
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i><span> {{ select[10] }}</span>
+                                        <i class="far fa-star"></i><span> {{ select[11] }}</span>
                                         {% else %}
                                         <i class="far fa-star"></i>
                                         <i class="far fa-star"></i>
@@ -183,7 +181,7 @@
                                         <i class="far fa-star"></i>
                                         {% endif %}
                                     </div>
-                                    <p>{{ select[7] }} </p>
+                                    <p>{{ select[8] }} </p>
                                     
                                 </div>
                             </div>
@@ -195,8 +193,6 @@
     </div>
     <!-- Navbar End -->
 
-    <!-- <hr> -->
-    
     <div class="container-fluid" style="margin-top: 10px;">
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs justify-content-center">
@@ -352,7 +348,7 @@
                                   <textarea class="form-control" rows="3" id="ulasan" name="ulasan" placeholder="Share details of your own experience at this place"></textarea>
                                </div>
                                {% for select in _select_wisata %}
-                               <input type="hidden" name="tempat" value="{{ select[4] }}"/>
+                               <input type="hidden" name="tempat" value="{{ select[5] }}"/>
                                <input type="hidden" name="id_tempat" value="{{ select[1] }}"/>
                                {% endfor %}
                                <div class="form-group col-auto ml-auto">
@@ -363,7 +359,7 @@
                         {% endif %}
                     </div>
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">{{ select[9]|round|int }} Reviews</h4>
+                        <h4 class="halal_desc">{{ select[10]|round|int }} Reviews</h4>
                         {% for ulas in reviews %}
                         <div class="row">
                                 <div class="col-lg-12">
@@ -449,7 +445,7 @@
                     </div>
                     <ul class="postcard__tagbox">
                         <li class="tag__item" title="Rating"><i class="fa fa-star me-2"></i> {{d[6]}}</li>
-                        <li class="tag__item" title="Distance"><i class="fas fa-tachometer-alt"></i> {{d[12]}} km</li>
+                        <li class="tag__item" title="Distance from {{ title}}"><i class="fas fa-tachometer-alt"></i> {{d[1]}} km</li>
                         <li class="tag__item"><i class="fa fa-landmark me-2"></i> {{d[4]}}</li>
                         <li class="tag__item play yellow">
                             <a href="#"><i class="fas fa-play mr-2"></i>Open</a>

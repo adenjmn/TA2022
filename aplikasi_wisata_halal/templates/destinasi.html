@@ -65,7 +65,7 @@
           <div id="apps" hidden>
             <div class="app">
               <i class="fab fa-apple"></i>
-              <p>{{ list[3] }}</p>
+              <p>{{ list[0] }}</p>
             </div>
           </div>
           {% endfor %}
@@ -152,14 +152,14 @@
             {% for d in data %}
             <li class="ncard">
                 <a href="../recs/{{ d[0] }}" class="card">
-                    <img src="{{ d[9] }}" class="card__image" alt="" />
+                    <img src="{{ d[10] }}" class="card__image" alt="" />
                     <div class="card__overlay">        
                         <div class="card__header">
                             <p bg-black class="flex-fill">{{ d[0] }}</p>
-                            <p bg-grey class="flex-fill"><i class="fas fa-star"></i> {{ d[13] }} ({{ d[12]|round|int }})</p>
+                            <p bg-grey class="flex-fill"><i class="fas fa-star"></i> {{ d[14] }} ({{ d[13]|round|int }})</p>
                         </div>
                         <div class="card__header">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i> {{ d[8] }}</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i> {{ d[9] }}</small>
                             <small class="flex-fill text-center py-2"><i class="fa fa-landmark me-2"></i> {{ d[6] }}</small>
                         </div>
                     </div>

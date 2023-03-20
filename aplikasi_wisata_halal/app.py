@@ -28,7 +28,7 @@ cursor = conn.cursor()
 # result_meta = cursor.fetchall()
 def start_data():
     cursor = koneksi()
-    sql_meta = "SELECT id_tempat,jenis, coordinat, tempat,city,img, description FROM data"
+    sql_meta = "SELECT id_tempat,jenis, coo1, coo2, tempat,city,img, description FROM data"
     cursor.execute(sql_meta)
     result_meta = cursor.fetchall()
     return result_meta
@@ -36,7 +36,7 @@ def start_data():
 def metadata():
     result_meta = start_data()
     # content-based
-    meta = pd.DataFrame(result_meta,columns= ['id_tempat','jenis','coordinat','tempat','kota','src_img','deskripsi'])
+    meta = pd.DataFrame(result_meta,columns= ['id_tempat','jenis','coo1','coo2','tempat','kota','src_img','deskripsi'])
     meta = meta.dropna(subset=['jenis'])
 
     conn = sqlite3.connect('../../tugas-akhir.db')
@@ -104,7 +104,7 @@ def find_distance():
         distances_km.append(
             haversine_distance(start_lat, start_lon, row.Lat, row.Lon)
         )
-    cities['Distance'] = distances_km
+    cities['distance'] = distances_km
     return cities
 
 def check_user(id_user, password):
@@ -159,7 +159,6 @@ def admin():
             # by recent
             ad_recent = meta.tail().sort_index(ascending=False)
             _ad_recent = ad_recent.values.tolist()
-            data = meta[['id_tempat_rating','jenis','coordinat','tempat','kota','src_img','deskripsi']]
             # by trend
             ad_trend = meta.sort_values(by='count_tempat',ascending=False).head(10)
             _ad_trend = ad_trend.values.tolist()
@@ -210,7 +209,7 @@ def new_destination():
             cursor = koneksi()
             cursor.execute('SELECT DISTINCT jenis FROM data ORDER BY jenis')
             types = cursor.fetchall()
-            return render_template('admin/destination/add_destination.html',types=types)
+            return render_template('admin/destination/add_destination.html',types=types,user=user)
         else:
             return redirect(url_for('home'))
     else:
@@ -221,15 +220,19 @@ def submit_destination():
     if request.method == 'POST':
         id_tempat = request.form['id']
         name = request.form['name']
-        type_destination = request.form['type']
+        types = request.form['types']
         link_img = request.form['img']
+        print(types)
+        print(link_img)
         description = request.form['desc']
         latitude = request.form['lat']
         longitude = request.form['lon']
         city = request.form['city']
+        
+        print(description)
         con = sqlite3.connect('../../tugas-akhir.db')
         cursor = con.cursor()
-        cursor.execute('INSERT INTO data(tempat,jenis,img,coo1,coo2,city,description,id_tempat) values (?,?,?,?,?,?,?,?)', (name, type_destination, link_img, latitude, longitude,city, description, id_tempat))
+        cursor.execute('INSERT INTO data(tempat,jenis,img,coo1,coo2,city,description,id_tempat) values (?,?,?,?,?,?,?,?)', (name, types, link_img, latitude, longitude,city, description, id_tempat))
         con.commit()
         return redirect(url_for('admin'))
 
@@ -249,7 +252,6 @@ def update_place(place=None):
 
                 con = sqlite3.connect('../../tugas-akhir.db')
                 cursor = con.cursor()
-                # UPDATE data SET jenis = 'Smith' WHERE id_tempat = 6699;
                 cursor.execute('UPDATE data SET jenis=?,img=?,coo1=?,coo2=?,city=?,description=? WHERE id_tempat=?', (type_destination, link_img, latitude, longitude,city, description,id_tempat))
                 con.commit()
                 con.close()
@@ -303,7 +305,8 @@ def new_place():
     if 'id_user' in session:
         userId = session["id_user"]
         if find_admin(userId):
-            return render_template('admin/halal/add.html')
+            user = find_admin(userId)
+            return render_template('admin/halal/add.html',user=user)
         else:
             return redirect(url_for('home'))
     else:
@@ -376,7 +379,8 @@ def new_member():
     if 'id_user' in session:
         userId = session["id_user"]
         if find_admin(userId):
-            return render_template('admin/member/add.html')
+            user = find_admin(userId)
+            return render_template('admin/member/add.html', user=user)
         else:
             return redirect(url_for('home'))
     else:
@@ -393,7 +397,6 @@ def update_member(place=None):
               
                 con = sqlite3.connect('../../tugas-akhir.db')
                 cursor = con.cursor()
-                # UPDATE data SET jenis = 'Smith' WHERE id_tempat = 6699;
                 cursor.execute('UPDATE user SET nama_pengguna=?,password=? WHERE id_user=?', (name,password,userId))
                 con.commit()
                 con.close()
@@ -536,6 +539,9 @@ def ulasan():
 @app.route('/recs/<tempat>')
 def rekomendasi(tempat):
     meta = metadata()
+    meta = meta.reset_index()
+    tempats = meta['tempat']
+    indices = pd.Series(meta.index, index=meta['tempat'])
     meta['features'] = meta['jenis']+meta['deskripsi']
     # meta['features'] = meta['jenis']
     #proses tfid
@@ -547,9 +553,7 @@ def rekomendasi(tempat):
     #cosine similarity
     cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 
-    meta = meta.reset_index()
-    tempats = meta['tempat']
-    indices = pd.Series(meta.index, index=meta['tempat'])
+    
     conn = sqlite3.connect('../../tugas-akhir.db')
     cursor = conn.cursor()
     # collaborative
@@ -615,10 +619,10 @@ def rekomendasi(tempat):
     sim_scores = sim_scores[1:40]
 
     wisata_indices = [i[0] for i in sim_scores]
-    cities = find_distance()
     wisatas = meta.iloc[wisata_indices][['tempat', 'features','id_tempat','id_tempat_rating','jenis','kota','avg_rating','src_img','deskripsi']]
+    cities = find_distance()
     wisatas = wisatas.merge(cities, how="left", on=["tempat"])
-    wisatas = wisatas.sort_values(by='Distance', ascending=True)
+    wisatas = wisatas.sort_values(by='distance', ascending=True)
     wisatas = wisatas.head(20)
     try:
         wisatas['est'] = wisatas['id_tempat'].apply(lambda x: svd_model.predict(userId, x).est)
@@ -648,11 +652,11 @@ def rekomendasi(tempat):
     halal = meta_halal()
     # print(halal.info())
 
-    src_lat = arr_select_wisata[0][3]
+    # src_lat = arr_select_wisata[0][3]
     # print("ini lAT=",src_lat)
-    src_coordinates = [item.strip() for item in src_lat.split(',')]
-    src_latitude = float(src_coordinates[0])
-    src_longitude = float(src_coordinates[1])
+    # src_coordinates = [item.strip() for item in src_lat.split(',')]
+    src_latitude = float(arr_select_wisata[0][3])
+    src_longitude = float(arr_select_wisata[0][4])
     
     start_lat_h, start_lon_h = src_latitude, src_longitude
     
@@ -689,7 +693,7 @@ def rekomendasi(tempat):
 
     arr_category = arr_select_wisata[0][2]
     # print(arr_category)
-    title = arr_select_wisata[0][4]
+    title = arr_select_wisata[0][5]
 
     return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata,_meta=arr_meta, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category,user=user)
 
@@ -698,7 +702,7 @@ def rekomendasi(tempat):
 def explore(filter = None):
     meta = metadata()
     cities = find_distance()
-    locale = cities.sort_values(by='Distance', ascending=True)
+    locale = cities.sort_values(by='distance', ascending=True)
     data = locale.merge(meta,how="left", on=["tempat"])
     new_data = data.dropna(subset=['jenis'])
     _data = new_data.values.tolist()

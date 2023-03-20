@@ -27,10 +27,7 @@
       <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
       {% endfor %}
     </div>
-    <div id="account-actions">
-      <a href="#" data-title="Home"><i class="fa fa-home"></i></a>
-      <a href="#" data-title="Logout"><i class="fa fa-cog"></i></a>
-    </div>
+    
     <ul id="main-nav">
       <li class="active">
         <a href="#">
@@ -87,7 +84,7 @@
       <tbody class="table-group-divider">
           {% for i in ad_recent %}
           <tr>
-              <td>{{ i[3] }}</td>
+              <td>{{ i[4] }}</td>
               <td>{{ i[1] }}</td>
               <td>{{ i[4] }}</td>
           </tr>
@@ -109,10 +106,10 @@
       <tbody class="table-group-divider">
           {% for t in ad_trend %}
           <tr>
-              <td>{{ t[3] }}</td>
-              <td>{{ t[1] }}</td>
               <td>{{ t[4] }}</td>
-              <td>{{ t[8]|round|int  }}</td>
+              <td>{{ t[1] }}</td>
+              <td>{{ t[5] }}</td>
+              <td>{{ t[9]|round|int  }}</td>
           </tr>
           {% endfor %}
       </tbody>
@@ -132,10 +129,10 @@
       <tbody class="table-group-divider">
           {% for r in ad_rating %}
           <tr>
-              <td>{{ r[3] }}</td>
-              <td>{{ r[1] }}</td>
               <td>{{ r[4] }}</td>
-              <td>{{ r[9] }}</td>
+              <td>{{ r[1] }}</td>
+              <td>{{ r[5] }}</td>
+              <td>{{ r[10] }}</td>
           </tr>
           {% endfor %}
       </tbody>

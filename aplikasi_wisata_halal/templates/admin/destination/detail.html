@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}">
 
 </head>
+
 <body>
   <div id="menu-overlay"></div>
   <div id="menu-toggle" class="closed" data-title="Menu">
@@ -27,14 +28,10 @@
           <img src="{{ url_for('static', filename='img/admin.png') }}" />
         </div>
         {% for i in user %}
-        <a href="#" id="profile-link">{{i[1]}}</a>
+        <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
         {% endfor %}
       </div>
-      <div id="account-actions">
-        <a href="" data-title="Home"><i class="fa fa-home"></i></a>
-        <!-- <a href="#" id="messages" data-title="Messages" data-newmessages="1"><i class="fa fa-inbox"></i></a> -->
-        <a href="#" data-title="Logout"><i class="fa fa-cog"></i></a>
-      </div>
+
       <ul id="main-nav">
         <li>
           <a href="/admin">
@@ -75,34 +72,34 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../destination">Destination</a></li>
         {% for i in destination %}
-        <li class="breadcrumb-item active" aria-current="page">{{i[3]}}</li>
+        <li class="breadcrumb-item active" aria-current="page">{{i[4]}}</li>
         {% endfor %}
       </ol>
     </nav>
 
     {% for i in destination %}
     <img src="{{ i[5] }}" alt="" class="fimage" />
-    <form action="/admin/destination/{{i[3]}}/update" method="POST">
+    <form action="/admin/destination/{{i[4]}}/update" method="POST">
       <input class="form-control form-control-sm" value="{{i[0]}}" name="id" type="hidden"
         placeholder=".form-control-sm" aria-label=".form-control-sm example">
       <div class="section"><span>1</span>Destination</div>
       <div class="inner-wrap">
         <label class="name" id="name" for="name">Name</label>
-        <input class="form-control form-control-sm" value="{{i[3]}}" name="name" type="text"
+        <input class="form-control form-control-sm" value="{{i[4]}}" name="name" type="text"
           placeholder=".form-control-sm" aria-label=".form-control-sm example" disabled>
         <label class="type" id="type" for="type">Type</label>
         <input class="form-control form-control-sm" value="{{i[1]}}" name="type" type="text"
           placeholder=".form-control-sm" aria-label=".form-control-sm example">
         <label class="img" id="img" for="img">Link Image</label>
-        <input class="form-control form-control-sm" value="{{i[5]}}" name="img" type="text"
+        <input class="form-control form-control-sm" value="{{i[6]}}" name="img" type="text"
           aria-label=".form-control-sm example">
         <label class="desc" id="desc" for="desc">Description</label>
-        <textarea class="form-control form-control-sm" name="desc" rows="4">{{i[6]}}</textarea>
+        <textarea class="form-control form-control-sm" name="desc" rows="4">{{i[7]}}</textarea>
       </div>
       <div class="section"><span>2</span>Location - City &amp; Coordinate</div>
       <div class="inner-wrap">
         <label class="city" id="city" for="city">City</label>
-        <input class="form-control form-control-sm" value="{{i[4]}}" name="city" type="text"
+        <input class="form-control form-control-sm" value="{{i[5]}}" name="city" type="text"
           placeholder=".form-control-sm" aria-label=".form-control-sm example">
       </div>
       <div class="inner-wrap">

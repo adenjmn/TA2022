@@ -28,12 +28,9 @@
           <div id="profile-picture">
             <img src="{{ url_for('static', filename='img/admin.png') }}"/>
           </div>
-          <a href="#" id="profile-link">Jesse Couch</a>
-        </div>
-        <div id="account-actions">
-          <a href="" data-title="Home"><i class="fa fa-home"></i></a>
-          <!-- <a href="#" id="messages" data-title="Messages" data-newmessages="1"><i class="fa fa-inbox"></i></a> -->
-          <a href="#" data-title="Logout"><i class="fa fa-cog"></i></a>
+          {% for i in user %}
+          <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
+          {% endfor %}
         </div>
         <ul id="main-nav">
           <li>
@@ -82,31 +79,31 @@
         <div class="section"><span>1</span>Destination</div>
         <div class="inner-wrap">
           <label class="id" id="id" for="id">ID Destination</label>
-          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example">
+          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example" required>
 
           <label class="name" id="name" for="name">Name</label>
-          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example">
+          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example" required>
 
           <label class="type" id="type" for="type">Type</label>
-          <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <select class="form-select form-select-sm" aria-label=".form-select-sm example" required name="types">
             {% for i in types %}
-            <option value="{{i}}">{{i[0]}}</option>
+            <option value="{{i[0]}}">{{i[0]}}</option>
             {% endfor %}
           </select>
 
           <label></label>
           <label class="img" id="img" for="img">Link Image</label>
           <input class="form-control form-control-sm" value="" name="img" type="text"
-            aria-label=".form-control-sm example">
+            aria-label=".form-control-sm example" required>
 
           <label class="desc" id="desc" for="desc">Description</label>
-          <textarea class="form-control form-control-sm" name="desc" rows="4"></textarea>
+          <textarea class="form-control form-control-sm" name="desc" rows="4"required></textarea>
         </div>
         <div class="section"><span>2</span>Location - City &amp; Coordinate</div>
         <div class="inner-wrap">
           <label class="city" id="city" for="city">City</label>
           <input class="form-control form-control-sm" value="" name="city" type="text"
-            aria-label=".form-control-sm example">
+            aria-label=".form-control-sm example" required>
         </div>
         <div class="inner-wrap">
           <label class="coordinate" id="coordinate" for="coordinate">Coordinate</label>
