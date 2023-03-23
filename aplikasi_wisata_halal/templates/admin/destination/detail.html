@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   {% for i in destination %}
-  <title>{{i[3]}} - Admin - Wisata Halal</title>
+  <title>{{i[4]}} - Admin - Wisata Halal</title>
   {% endfor %}
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,7 +78,7 @@
     </nav>
 
     {% for i in destination %}
-    <img src="{{ i[5] }}" alt="" class="fimage" />
+    <img src="{{ i[6] }}" alt="" class="fimage" />
     <form action="/admin/destination/{{i[4]}}/update" method="POST">
       <input class="form-control form-control-sm" value="{{i[0]}}" name="id" type="hidden"
         placeholder=".form-control-sm" aria-label=".form-control-sm example">

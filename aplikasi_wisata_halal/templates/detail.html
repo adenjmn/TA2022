@@ -235,9 +235,9 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-mosque" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ mesjid[0] }}</h6>
-                                            <h6><small>{{ mesjid[3] }}</small></h6>
-                                            <h6><small>Distance <i> {{ mesjid[7] }} </i> km</small></h6>
+                                            <h6>{{ mesjid[1] }}</h6>
+                                            <h6><small>{{ mesjid[4] }}</small></h6>
+                                            <h6><small>Distance <i> {{ mesjid[8] }} </i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -262,9 +262,9 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ makan[0] }}</h6>
-                                            <h6><small>{{makan[3]}}</small></h6>
-                                            <h6><small>Distance <i> {{makan[7]}}</i> km</small></h6>
+                                            <h6>{{ makan[1] }}</h6>
+                                            <h6><small>{{makan[4]}}</small></h6>
+                                            <h6><small>Distance <i> {{makan[8]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -285,9 +285,9 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ iplace[0] }}</h6>
-                                            <h6><small>{{iplace[3]}}</small></h6>
-                                            <h6><small>Distance <i> {{iplace[7]}}</i> km</small></h6>
+                                            <h6>{{ iplace[1] }}</h6>
+                                            <h6><small>{{iplace[4]}}</small></h6>
+                                            <h6><small>Distance <i> {{iplace[8]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -308,9 +308,9 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ iplace[0] }}</h6>
-                                            <h6><small>{{iplace[3]}}</small></h6>
-                                            <h6><small>Distance <i> {{iplace[7]}}</i> km</small></h6>
+                                            <h6>{{ iplace[1] }}</h6>
+                                            <h6><small>{{iplace[4]}}</small></h6>
+                                            <h6><small>Distance <i> {{iplace[8]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -365,11 +365,8 @@
                                 <div class="col-lg-12">
                                     <div class="media mb-4">
                                         <i class="fas fa-user" style="width: 45px;height: auto;"></i>
-                                        <!-- <img src="https://lh3.googleusercontent.com/a-/AFdZucoMKWlJr79-lfEgOF2XWCVYERI9MgiK3mAxQZm0GA=w60-h60-p-rp-mo-ba3-br100" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;height: auto;"> -->
                                         <div class="media-body">
-                                            <h6>{{ ulas[5] }}
-                                                <!-- <small> - <i>01 Jan 2045</i></small> -->
-                                            </h6>
+                                            <h6>{{ ulas[5] }}</h6>
                                             <div class="rate mb-2">
                                                 <div title='Rating {{ ulas[2]|round|int  }}''>
                                                     {% if ulas[2] > 4.5 %}
@@ -445,7 +442,7 @@
                     </div>
                     <ul class="postcard__tagbox">
                         <li class="tag__item" title="Rating"><i class="fa fa-star me-2"></i> {{d[6]}}</li>
-                        <li class="tag__item" title="Distance from {{ title}}"><i class="fas fa-tachometer-alt"></i> {{d[1]}} km</li>
+                        <li class="tag__item" title="Distance from {{ title}}"><i class="fas fa-tachometer-alt"></i> {{d[11]}} km</li>
                         <li class="tag__item"><i class="fa fa-landmark me-2"></i> {{d[4]}}</li>
                         <li class="tag__item play yellow">
                             <a href="#"><i class="fas fa-play mr-2"></i>Open</a>
@@ -462,8 +459,6 @@
     <script  src="{{ url_for('static', filename='js/to_top.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-
-  
     
 </body>
 </html>
