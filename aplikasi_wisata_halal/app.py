@@ -457,11 +457,11 @@ def register():
         else:
             con = sqlite3.connect('../../tugas-akhir.db')
             cursor = con.cursor()
-            cursor.execute('INSERT INTO user(nama_pengguna,id_user,password,points,level,n_reviews,img_src,status) values (?,?,?,?,?,?,?)', (full_name,id_user, password,0,0,0,'default',status))
+            cursor.execute('INSERT INTO user(nama_pengguna,id_user,password,points,level,n_reviews,img_src,status) values (?,?,?,?,?,?,?,?)', (full_name,id_user, password,0,0,0,'default',status))
             con.commit()
             con.close()
             session['id_user'] = id_user
-            return redirect(url_for('profile'))
+            return redirect(url_for('history'))
             
 @app.route('/login', methods=["POST", "GET"])
 def login():
@@ -479,7 +479,7 @@ def login():
             msg = ['Sorry, your password was incorrect. Please double-check your password.']
             return render_template('login.html',msg=msg)
 @app.route('/user')
-def profile():
+def history():
     if 'id_user' in session:
         userId = session["id_user"]
         cursor = koneksi()
@@ -491,7 +491,7 @@ def profile():
         n_history = len(history)
         # print(user)
         
-        return render_template('profile.html' , profil=user, history=history,n_history=n_history)
+        return render_template('history.html' , profil=user, history=history,n_history=n_history)
     else:
         return redirect(url_for('signin'))
 
@@ -531,7 +531,7 @@ def ulasan():
         except:
             pass
     
-        return redirect(url_for('profile'))
+        return redirect(url_for('history'))
     else:
         return redirect(url_for('signin'))
 
