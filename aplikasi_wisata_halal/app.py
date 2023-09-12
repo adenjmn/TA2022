@@ -1,16 +1,15 @@
 from flask import *
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+from sklearn.metrics import mean_squared_error
+from surprise import Reader, Dataset, SVD
+from surprise.model_selection import cross_validate, train_test_split
+from sklearn.preprocessing import LabelEncoder
+from math import *
 
 import sqlite3
 import pandas as pd
 import numpy as np
-
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
-from surprise import Reader, Dataset, SVD
-from surprise.model_selection import cross_validate, train_test_split
-from sklearn.preprocessing import LabelEncoder
-
-from math import *
 import geocoder
 
 le = LabelEncoder()
@@ -23,9 +22,7 @@ def convert_int(x):
 
 conn = sqlite3.connect('../../tugas-akhir-local.db')
 cursor = conn.cursor()
-# sql_meta = "SELECT id_tempat,jenis, coordinat, tempat,city,img, description FROM data"
-# cursor.execute(sql_meta)
-# result_meta = cursor.fetchall()
+
 def start_data():
     cursor = koneksi()
     sql_meta = "SELECT id_tempat,jenis, latitude, longitude, tempat,city,img, description FROM data"
@@ -553,7 +550,6 @@ def rekomendasi(tempat):
 
     #cosine similarity
     cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
-
     
     conn = sqlite3.connect('../../tugas-akhir-local.db')
     cursor = conn.cursor()
@@ -576,12 +572,9 @@ def rekomendasi(tempat):
     src_rating = src_rating.sort_index(ascending=False)
 
     data_ratings = Dataset.load_from_df(src_rating[['userId','id_tempat_rating','rating']], reader)
-
-
     algo = SVD()
     svd_model = SVD(n_factors= 50, n_epochs= 30, lr_all=0.01, reg_all=0.02)
 
-    # cross_validate(svd_model, data_ratings, measures=['RMSE', 'MAE'], cv=5, verbose=True)
     # trainset = data_ratings.build_full_trainset()
     trainset, testset = train_test_split(data_ratings, test_size=0.20)
     svd_model.fit(trainset)
@@ -611,9 +604,7 @@ def rekomendasi(tempat):
     idx = indices[tempat]
     select_wisata = meta.loc[meta['tempat']==tempat]
     arr_select_wisata = select_wisata.values.tolist()
-    # id_tempat = store.loc[tempat]['id_tempat']
-    # print('IDX = ',idx)
-    
+        
     wisata_id = store.loc[tempat]['id_tempat_rating']
     sim_scores = list(enumerate(cosine_sim[int(idx)]))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
@@ -624,9 +615,6 @@ def rekomendasi(tempat):
     src_lat = float(arr_select_wisata[0][3])
     src_long = float(arr_select_wisata[0][4])
     
-    # start_lat_h, start_lon_h = src_lat, src_long
-    
-    # halal['tempat'] = halal['tempat'].str.title()
     hdistances_km = []
     for row in wisatas.itertuples(index=False):
         hdistances_km.append(
@@ -645,7 +633,7 @@ def rekomendasi(tempat):
         # pass
     wisatas = wisatas.head(10)
     # print(wisatas.info())   
-    # print(select_wisata.info())
+    
     src_rating['tempat'] = src_rating['tempat'].str.title() # nama tempat
     src_reviews = src_rating.loc[src_rating['tempat'] == tempat]
     
@@ -695,8 +683,11 @@ def rekomendasi(tempat):
     hotel = hotel[:5]
 
     arr_category = arr_select_wisata[0][2]
-    # print(arr_category)
     title = arr_select_wisata[0][5]
+
+    # evaluate
+    evaluate_cbf(tempat,cosine_sim,idx)
+    cross_validate(svd_model, data_ratings, measures=['RMSE'], cv=5, verbose=True)
 
     return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata,_meta=arr_meta, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category,user=user)
 
@@ -730,6 +721,23 @@ def explore(filter = None):
         filter = 'terdekat'
     
     return render_template('destinasi.html', data=_data,filter=filter, user=user,_meta=_data)
+
+def evaluate_cbf(title,cosine_sim,idx):
+    smd = metadata()
+    scores_sim = list(enumerate(cosine_sim[idx]))
+    scores_sim = sorted(scores_sim, key=lambda x: x[1], reverse=True)
+    user_preferences = smd['avg_rating'].values
+
+    # Menghitung skor prediksi berdasarkan kemiripan kosinus
+    predicted_scores = np.dot(cosine_sim, user_preferences) / np.sum(cosine_sim, axis=1)
+
+    # Skor sebenarnya yang akan dibandingkan dengan skor prediksi
+    actual_scores = smd['avg_rating'].values
+
+    # Menghitung RMSE
+    rmse_cbf = np.sqrt(mean_squared_error(actual_scores, predicted_scores))
+
+    return print("Evaluating RMSE of algorithm cosine similarity",rmse_cbf)
 
 if __name__ == "__main__":
     app.run(debug=True)
