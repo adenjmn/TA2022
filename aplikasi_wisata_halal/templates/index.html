@@ -34,9 +34,7 @@
       <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
           <a href="" class="text-decoration-none">
-            <img
-              src="{{ url_for('static', filename='img/name_logo.png') }}"
-              width="200"
+            <img src="{{ url_for('static', filename='img/name_logo.png') }}"width="200"
             />
           </a>
         </div>
@@ -46,7 +44,7 @@
               <input
                 type="text"
                 class="form-control"
-                placeholder="Search for Destinasi"
+                placeholder="Cari tujuan destinasi"
                 id="search"
                 autocomplete="off"
               />
@@ -126,27 +124,27 @@
           <div id="header-carousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
               <div class="carousel-item active" style="height: 410px">
-                <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipMCydsxzp2dQaFWpmL7Os4cWwkSYd2ziifm3gCU" alt="Image"/>
+                <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipOicfTLyNPy7yY-PrA1bkndgKMP_0rDpJUcOgKQ" alt="Image"/>
                 <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                   <div class="p-3" style="max-width: 700px">
                     <h4 class="text-light text-uppercase font-weight-medium mb-3">
-                      Halal/Muslim Friendly Destination
+                      Cari Destinasi 
                     </h4>
                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">
-                      Muslim Travellers
+                      Wisata Halal
                     </h3>
                   </div>
                 </div>
               </div>
               <div class="carousel-item" style="height: 410px">
-                <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipOicfTLyNPy7yY-PrA1bkndgKMP_0rDpJUcOgKQ=w408-h272-k-no" alt="Image"/>
+                <img class="img-fluid" src="https://lh5.googleusercontent.com/p/AF1QipMickbVWzpeBBh4m4kRfMbsbmM7871zPmZjvk6k" alt="Image"/>
                 <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                   <div class="p-3" style="max-width: 700px">
                     <h4 class="text-light text-uppercase font-weight-medium mb-3">
-                      Knowledgeable Trusted for Halal/Muslim friendly Travel.
+                      Sistem Rekomendasi 
                     </h4>
                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">
-                      Vacation
+                      Wisata Halal
                     </h3>
                   </div>
                 </div>
@@ -180,39 +178,27 @@
     <div class="container-fluid pt-5">
       <div class="row px-xl-5 pb-3">
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-          <div
-            class="d-flex align-items-center border mb-4"
-            style="padding: 30px"
-          >
-            <h1 class="fa fa-mosque text-success m-0 mr-3"></h1>
-            <h4 class="font-weight-semi-bold m-0">Mosque</h4>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-          <div
-            class="d-flex align-items-center border mb-4"
-            style="padding: 30px"
-          >
-            <h1 class="fa fa-utensils text-success m-0 mr-2"></h1>
-            <h4 class="font-weight-semi-bold m-0">Halal Food</h4>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-          <div
-            class="d-flex align-items-center border mb-4"
-            style="padding: 30px"
-          >
-            <h1 class="fa fa-star text-success m-0 mr-3"></h1>
-            <h4 class="font-weight-semi-bold m-0">Reviews</h4>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-          <div
-            class="d-flex align-items-center border mb-4"
-            style="padding: 30px"
-          >
+          <div class="d-flex align-items-center border mb-4" style="padding: 30px">
             <h1 class="fa fa-globe-asia text-success m-0 mr-3"></h1>
-            <h4 class="font-weight-semi-bold m-0">Travellers</h4>
+            <h4 class="font-weight-semi-bold m-0">Wisata</h4>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+          <div class="d-flex align-items-center border mb-4"style="padding: 30px">
+            <h1 class="fa fa-mosque text-success m-0 mr-3"></h1>
+            <h4 class="font-weight-semi-bold m-0">Masjid</h4>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+          <div class="d-flex align-items-center border mb-4" style="padding: 30px">
+            <h1 class="fa fa-utensils text-success m-0 mr-2"></h1>
+            <h4 class="font-weight-semi-bold m-0">Restoran</h4>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+          <div class="d-flex align-items-center border mb-4"style="padding: 30px">
+            <h1 class="fa fa-star text-success m-0 mr-3"></h1>
+            <h4 class="font-weight-semi-bold m-0">Ulasan</h4>
           </div>
         </div>
       </div>
@@ -220,7 +206,7 @@
     <!-- Featured End -->
 
     <!-- Package Start -->
-    <div class="container-xxl py-5">
+    <!-- <div class="container-xxl py-5">
       <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
           <h3 class="mb-5">About Wisata Halal</h3>
@@ -235,7 +221,7 @@
           </p>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Package End -->
 
     <!-- JavaScript Libraries -->

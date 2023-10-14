@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Create New Place Halal - Admin - Wisata Halal</title>
+  <title>Tambah Tempat Pendukung - Admin - Wisata Halal</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -42,13 +42,13 @@
           <li>
             <a href="/admin/destination">
               <i class="fa fa-landmark"></i>
-              Destination
+              Destinasi
             </a>
           </li>
           <li class="active">
             <a href="/admin/place">
               <i class="fa fa-place-of-worship"></i>
-              Supporting Place 
+              Tempat Pendukung
             </a>
           </li>
           <li>
@@ -60,7 +60,7 @@
           <li>
             <a href="/logout">
               <i class="fa fa-sign-out-alt"></i>
-              Logout
+              Keluar
             </a>
           </li>
         </ul>
@@ -70,45 +70,46 @@
     <section id="content" class="form-style">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="./place" style="text-decoration:none">Place</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Add Supporting Place Halal</li>
+          <li class="breadcrumb-item"><a href="./place" style="text-decoration:none">Tempat Pendukung</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Tambah Tempat</li>
         </ol>
       </nav>
+      {% if pesan == "": %}
+      {% else %}
+      <h3>{{pesan}}</h3>
+      <p>Pastikan ID destinasi berbeda</p>
+      {% endif %}
 
       <form action="/admin/add_place/new" method="POST">
-        <div class="section"><span>1</span>Place by Halal</div>
+        <div class="section"><span>1</span>Tempat Pendukung</div>
         <div class="inner-wrap">
-          <label class="id" id="id" for="id">ID Destination</label>
-          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example"
-            autocomplete="off" required>
+          <label class="id" id="id" for="id">ID Destinasi</label>
+          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example" autocomplete="off" required>
 
-          <label class="name" id="name" for="name">Name</label>
-          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example"
-            autocomplete="off" required>
+          <label class="name" id="name" for="name">Nama</label>
+          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example" autocomplete="off" required>
 
-          <label class="type" id="type" for="type">Type</label>
+          <label class="type" id="type" for="type">Jenis</label>
           <select class="form-select" multiple aria-label="multiple select" name="type" id="type" required>
-            <option value="Mosque">Mosque</option>
-            <option value="Restaurants">Restaurants</option>
+            <option value="Mosque">Masjid</option>
+            <option value="Restaurants">Restoran</option>
             <option value="Hotel">Hotel</option>
             <option value="ATM">ATM</option>
           </select>
           <label class="img" id="img" for="img"></label>
-          <label class="img" id="img" for="img">Link Image</label>
-          <input class="form-control form-control-sm" value="" name="img" type="text"
-            aria-label=".form-control-sm example" autocomplete="off" required>
+          <label class="img" id="img" for="img">Link Gambar</label>
+          <input class="form-control form-control-sm" value="" name="img" type="text" aria-label=".form-control-sm example" autocomplete="off" required>
 
-          <label class="desc" id="desc" for="desc">Description</label>
+          <label class="desc" id="desc" for="desc">Deskripsi</label>
           <textarea class="form-control form-control-sm" name="desc" rows="4" autocomplete="off"></textarea>
         </div>
-        <div class="section"><span>2</span>Location - Address &amp; Coordinate</div>
+        <div class="section"><span>2</span>Lokasi - Alamat &amp; Koordinat</div>
         <div class="inner-wrap">
-          <label class="address">Address</label>
-          <input class="form-control form-control-sm" value="" name="address" type="text"
-            aria-label=".form-control-sm example" autocomplete="off" required>
+          <label class="address">Alamat</label>
+          <input class="form-control form-control-sm" value="" name="address" type="text" aria-label=".form-control-sm example" autocomplete="off" required>
         </div>
         <div class="inner-wrap">
-          <label class="coordinate" id="coordinate" for="coordinate">Coordinate</label>
+          <label class="coordinate" id="coordinate" for="coordinate">Koordinat</label>
           <div id="mapCanvas" class="inner-wrap"></div>
           <b>Latitude:</b>
           <div id="info_lat"></div>
@@ -118,7 +119,7 @@
           <input class="form-control form-control-sm" name="lon" type="hidden" aria-label=".form-control-sm example">
         </div>
 
-        <div class="section"><button type="submit" class="btn btn-primary">Submit</button></div>
+        <div class="section"><button type="submit" class="btn btn-primary">Tambah</button></div>
 
       </form>
 

@@ -196,17 +196,17 @@
     <div class="container-fluid" style="margin-top: 10px;">
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs justify-content-center">
-            {% if category != 'Mosque' %}
+            {% if category != 'Masjid' %}
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" href="#mosque">Mosque</a>
+                <a class="nav-link active" data-bs-toggle="tab" href="#mosque">Masjid</a>
             </li>
             {% endif %}
             
             <li class="nav-item">
-                {% if category == 'Mosque' %}
-                <a class="nav-link active" data-bs-toggle="tab" href="#food">Restaurant</a>
+                {% if category == 'Masjid' %}
+                <a class="nav-link active" data-bs-toggle="tab" href="#food">Restoran</a>
                 {% else %}
-                <a class="nav-link" data-bs-toggle="tab" href="#food">Restaurant</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#food">Restoran</a>
                 {% endif %}
             </li>
             <li class="nav-item">
@@ -216,7 +216,7 @@
                 <a class="nav-link" data-bs-toggle="tab" href="#atm">ATM</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#review">Reviews</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#review">Ulasan</a>
             </li>
 		</ul>
 	</div>
@@ -224,10 +224,11 @@
         <!-- Tab panes -->
         <div class="container">
             <div class="tab-content">
-                {% if category != 'Mosque' %}
+                {% if category != 'Masjid' %}
                 <div class="tab-pane container active" id="mosque">
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">More to explore mosque</h4>
+                        <h4 class="halal_desc">Daftar Masjid terdekat dari {{ title }}</h4>
+                        <hr>
                         <div class="mb-5 postcard__text">
                             {% for mesjid in mosque %}
                             <div class="row">
@@ -237,7 +238,7 @@
                                         <div class="media-body">
                                             <h6>{{ mesjid[1] }}</h6>
                                             <h6><small>{{ mesjid[4] }}</small></h6>
-                                            <h6><small>Distance <i> {{ mesjid[8] }} </i> km</small></h6>
+                                            <h6><small>Jarak <i> {{ mesjid[8] }} </i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -248,13 +249,14 @@
                     </div>
                 </div>
                 {% endif %}
-                {% if category == 'Mosque' %}
+                {% if category == 'Masjid' %}
                 <div class="tab-pane container active" id="food">
                 {% else %}
                 <div class="tab-pane container fade" id="food">
                 {% endif %}
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">More to explore Restaurant</h4>
+                        <h4 class="halal_desc">Daftar Restoran terdekat dari {{ title }}</h4>
+                        <hr>
                         <div class="mb-5 postcard__text">
                             {% for makan in resto %}
                             <div class="row">
@@ -264,7 +266,7 @@
                                         <div class="media-body">
                                             <h6>{{ makan[1] }}</h6>
                                             <h6><small>{{makan[4]}}</small></h6>
-                                            <h6><small>Distance <i> {{makan[8]}}</i> km</small></h6>
+                                            <h6><small>Jarak <i> {{makan[8]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +279,8 @@
 
                 <div class="tab-pane container fade" id="hotel">
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">More to explore Hotel</h4>
+                        <h4 class="halal_desc">Daftar Hotel terdekat dari {{ title }}</h4>
+                        <hr>
                         <div class="mb-5 postcard__text">
                             {% for iplace in hotel %}
                             <div class="row">
@@ -287,7 +290,7 @@
                                         <div class="media-body">
                                             <h6>{{ iplace[1] }}</h6>
                                             <h6><small>{{iplace[4]}}</small></h6>
-                                            <h6><small>Distance <i> {{iplace[8]}}</i> km</small></h6>
+                                            <h6><small>Jarak <i> {{iplace[8]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -300,7 +303,8 @@
 
                 <div class="tab-pane container fade" id="atm">
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">More to explore ATM</h4>
+                        <h4 class="halal_desc">Daftar ATM terdekat dari {{ title }}</h4>
+                        <hr>
                         <div class="mb-5 postcard__text">
                             {% for iplace in atm %}
                             <div class="row">
@@ -310,7 +314,7 @@
                                         <div class="media-body">
                                             <h6>{{ iplace[1] }}</h6>
                                             <h6><small>{{iplace[4]}}</small></h6>
-                                            <h6><small>Distance <i> {{iplace[8]}}</i> km</small></h6>
+                                            <h6><small>Jarak <i> {{iplace[8]}}</i> km</small></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -344,22 +348,22 @@
                                   </div>
                                </div>
                                <div class="form-group input-group-sm col-md-12">
-                                  <label for="ulasan">Reviews</label>
-                                  <textarea class="form-control" rows="3" id="ulasan" name="ulasan" placeholder="Share details of your own experience at this place"></textarea>
+                                  <label for="ulasan">Ulasan</label>
+                                  <textarea class="form-control" rows="3" id="ulasan" name="ulasan" placeholder="Bagikan detail pengalaman Anda sendiri di tempat ini"></textarea>
                                </div>
                                {% for select in _select_wisata %}
                                <input type="hidden" name="tempat" value="{{ select[5] }}"/>
                                <input type="hidden" name="id_tempat" value="{{ select[1] }}"/>
                                {% endfor %}
                                <div class="form-group col-auto ml-auto">
-                                  <button type="submit" class="btn btn-primary">Send</button>
+                                  <button type="submit" class="btn btn-primary">Posting</button>
                                </div>
                             </form>
                         </div>
                         {% endif %}
                     </div>
                     <div class="mb-5 postcard__text">
-                        <h4 class="halal_desc">{{ select[10]|round|int }} Reviews</h4>
+                        <h4 class="halal_desc">{{ select[10]|round|int }} Ulasan</h4>
                         {% for ulas in reviews %}
                         <div class="row">
                                 <div class="col-lg-12">
@@ -442,10 +446,10 @@
                     </div>
                     <ul class="postcard__tagbox">
                         <li class="tag__item" title="Rating"><i class="fa fa-star me-2"></i> {{d[6]}}</li>
-                        <li class="tag__item" title="Distance from {{ title}}"><i class="fas fa-tachometer-alt"></i> {{d[11]}} km</li>
+                        <li class="tag__item" title="Jarak dari {{ title}}"><i class="fas fa-tachometer-alt"></i> {{d[11]}} km</li>
                         <li class="tag__item"><i class="fa fa-landmark me-2"></i> {{d[4]}}</li>
                         <li class="tag__item play yellow">
-                            <a href="#"><i class="fas fa-play mr-2"></i>Open</a>
+                            <a href="#"><i class="fas fa-play mr-2"></i>Lihat</a>
                         </li>
                     </ul>
                 </div>

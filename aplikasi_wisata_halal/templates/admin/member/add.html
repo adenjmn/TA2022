@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Create Account Admin - Wisata Halal</title>
+  <title>Daftar admin baru - Wisata Halal</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -41,13 +41,13 @@
           <li>
             <a href="/admin/destination">
               <i class="fa fa-landmark"></i>
-              Destination
+              Destinasi
             </a>
           </li>
           <li>
             <a href="/admin/place">
               <i class="fa fa-place-of-worship"></i>
-              Supporting Place 
+              Tempat Pendukung 
             </a>
           </li>
           <li class="active">
@@ -59,7 +59,7 @@
           <li>
             <a href="/logout">
               <i class="fa fa-sign-out-alt"></i>
-              Logout
+              Keluar
             </a>
           </li>
         </ul>
@@ -69,25 +69,22 @@
     <section id="content" class="form-style">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="./member" style="text-decoration:none">Admin</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Create</li>
+          <li class="breadcrumb-item"><a href="./member" style="text-decoration:none">Kelola admin</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Tambah</li>
         </ol>
       </nav>
 
       <form action="/admin/add_member/new" method="POST">
-        <div class="section">Create your Account</div>
+        <div class="section">Daftarkan admin</div>
         <div class="inner-wrap">
-          <label class="id" id="id" for="id">ID USER</label>
-          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example"
-            autocomplete="off" required>
-          <label class="name" id="name" for="name">Name</label>
-          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example"
-            autocomplete="off" required>
+          <label class="id" id="id" for="id">ID Admin</label>
+          <input class="form-control form-control-sm" name="id" type="number" aria-label=".form-control-sm example" autocomplete="off" required>
+          <label class="name" id="name" for="name">Nama</label>
+          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example" autocomplete="off" required>
           <label>Password</label>
-          <input class="form-control form-control-sm" name="password" type="password"
-            aria-label=".form-control-sm example" autocomplete="off" required>
+          <input class="form-control form-control-sm" name="password" type="password" aria-label=".form-control-sm example" autocomplete="off" required>
         </div>
-        <div class="section"><button type="submit" class="btn btn-primary">Submit</button></div>
+        <div class="section"><button type="submit" class="btn btn-primary">Daftar</button></div>
       </form>
     </section>
 
