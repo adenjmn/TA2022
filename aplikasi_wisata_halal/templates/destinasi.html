@@ -36,22 +36,13 @@
         <div class="row align-items-center py-3 px-xl-5">
           <div class="col-lg-3 d-none d-lg-block">
             <a href="" class="text-decoration-none">
-              <img
-                src="{{ url_for('static', filename='img/name_logo.png') }}"
-                width="200"
-              />
+              <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200"/>
             </a>
           </div>
           <div class="col-lg-6 col-6 text-left">
             <form action="">
               <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Cari tujuan destinasi"
-                  id="search"
-                  autocomplete="off"
-                />
+                <input type="text" class="form-control" placeholder="Cari tujuan destinasi" id="search" autocomplete="off"/>
                 <div class="input-group-append">
                   <span class="input-group-text bg-transparent text-success">
                     <i class="fa fa-search"></i>
@@ -65,7 +56,7 @@
           <div id="apps" hidden>
             <div class="app">
               <i class="fab fa-apple"></i>
-              <p>{{ list[0] }}</p>
+              <p>{{ list[4] }}</p>
             </div>
           </div>
           {% endfor %}
@@ -107,7 +98,6 @@
       </div>
       <!-- Topbar End -->
 
-
     <!-- Navbar Start -->
     <div class="container-fluid mb-5">
         <div class="row border-top px-xl-5">
@@ -131,8 +121,6 @@
                             <i class="fas fa-stream"></i> Filter
                         </a>
                         <div class="dropdown-menu menu">
-                            <a href="terdekat" class="dropdown-item">
-                                <i class="fas fa-street-view"></i> Terdekat</a>
                             <a href="populer" class="dropdown-item">
                                 <i class="fas fa-level-up-alt"></i> Populer</a>
                             <a href="rating" class="dropdown-item">
@@ -151,16 +139,16 @@
         <div class="cards">
             {% for d in data %}
             <li class="ncard">
-                <a href="../recs/{{ d[0] }}" class="card">
-                    <img src="{{ d[10] }}" class="card__image" alt="" />
+                <a href="../recs/{{ d[4] }}" class="card">
+                    <img src="{{ d[6] }}" class="card__image" alt="" />
                     <div class="card__overlay">        
                         <div class="card__header">
-                            <p bg-black class="flex-fill">{{ d[0] }}</p>
-                            <p bg-grey class="flex-fill"><i class="fas fa-star"></i> {{ d[14] }} ({{ d[13]|round|int }})</p>
+                            <p bg-black class="flex-fill">{{ d[4] }}</p>
+                            <p bg-grey class="flex-fill"><i class="fas fa-star"></i> {{ d[10] }} ({{ d[9]|round|int }})</p>
                         </div>
                         <div class="card__header">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i> {{ d[9] }}</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-landmark me-2"></i> {{ d[6] }}</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i> {{ d[5] }}</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-landmark me-2"></i> {{ d[1] }}</small>
                         </div>
                     </div>
                 </a>      

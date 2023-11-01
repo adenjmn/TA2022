@@ -94,16 +94,16 @@
                                     {% if user[8] == 'default' %}
                                     <img src="{{ url_for('static', filename='img/user.jpg') }}" alt="{{ user[1] }}" class="rounded-circle p-1" width="110">
                                     {% else %}
-                                    <img src="{{ user[8] }}" alt="{{ user[1] }}" class="rounded-circle p-1" width="110">
+                                    <img src="{{ user[3] }}" alt="{{ user[1] }}" class="rounded-circle p-1" width="110">
                                     {% endif %}
                                     <div class="mt-3 profile card-body">
                                         <h4>{{ user[1] }}</h4>
                                         <h4 class="id_user">{{ user[0] }}</h4>
                                         <hr>
-                                        <p>LEVEL : {{ user[4] }}</p>
-                                        <p>POINTS : {{ user[3] }}</p>
+                                        <p>LEVEL : {{ user[7] }}</p>
+                                        <p>POINTS : {{ user[6] }}</p>
                                         <span>Status : </span>
-                                        <span class="badge badge-success">{{ user[10] }} </span>
+                                        <span class="badge badge-success">{{ user[2] }} </span>
                                         <hr>
                                         {% if user[10] == 'Admin' %}
                                         <a class="btn btn-primary" href="/admin">Admin Menu</a>
@@ -123,31 +123,31 @@
                                     <ul>
                                         {% for recent in history %}
                                         <li>
-                                            <a href="recs/{{ recent[3] }}">
+                                            <a href="recs/{{ recent[4] }}">
                                             
                                             <div class="content">
-                                                <span>{{ recent[3] }}</span>
-                                                <h3> {{ recent[4] }}</h3>
-                                                <div title='Rating {{ recent[2] }}'>
-                                                    {% if recent[2] == 5 %}
+                                                <span>{{ recent[4] }}</span>
+                                                <h3> {{ recent[5] }}</h3>
+                                                <div title='Rating {{ recent[3] }}'>
+                                                    {% if recent[3] == 5 %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
-                                                    {% elif recent[2] == 4 %}
+                                                    {% elif recent[3] == 4 %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="far fa-star"></i>
-                                                    {% elif recent[2] == 3 %}
+                                                    {% elif recent[3] == 3 %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="far fa-star"></i>
                                                     <i class="far fa-star"></i>
-                                                    {% elif recent[2] == 2  %}
+                                                    {% elif recent[3] == 2  %}
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
                                                     <i class="far fa-star"></i>
@@ -161,7 +161,7 @@
                                                     <i class="far fa-star"></i>
                                                     {% endif %}
                                                 </div>
-                                                <p>{{ recent[5] }}</p>
+                                                <p>{{ recent[6] }}</p>
                                             </div>
                                             </a>
                                         </li>

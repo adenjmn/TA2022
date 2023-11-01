@@ -25,11 +25,8 @@
     <div class="container-fluid">
         <div class="row align-items-center py-3 px-xl-5">
           <div class="col-lg-3 d-none d-lg-block">
-            <a href="" class="text-decoration-none">
-              <img
-                src="{{ url_for('static', filename='img/name_logo.png') }}"
-                width="200"
-              />
+            <a href="/" class="text-decoration-none">
+              <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200" />
             </a>
           </div>
           <div class="col-lg-6 col-6 text-left">
@@ -428,7 +425,7 @@
     <!-- partial:index.partial.html -->
     <section class="light">
         <div class="container py-4">
-            <h1 class="h1 text-center" id="pageHeaderTitle">Similar Destinations (Recommender)</h1>
+            <h1 class="h1 text-center" id="pageHeaderTitle">Tujuan Serupa - Rekomendasi</h1>
             {% for d in data %}
             <article class="postcard dark yellow">
                 <a class="postcard__img_link" href="/recs/{{ d[0] }}">
