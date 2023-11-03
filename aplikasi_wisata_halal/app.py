@@ -189,8 +189,6 @@ def admin_select(id_dest=None):
         if find_admin(userId):
             user = find_admin(userId)
             meta = metadata()
-            print(meta.info())
-            # print(type(id_dest))
             select_wisata = meta.loc[meta['id_tempat']==int(id_dest)]
             _destination = select_wisata.values.tolist()
             return render_template('admin/destination/detail.html', destination=_destination, user=user)
@@ -570,20 +568,15 @@ def rekomendasi(tempat):
 
     src_rating = pd.DataFrame(result_rating,columns= ['userId','id_tempat_rating','rating','review','tempat','nama'])
     src_rating['rating'] = src_rating['rating'].astype('float')
-    # src_rating['id_tempat_rating'] = src_rating['id_tempat_rating'].astype('float')
     src_rating['id_tempat_rating'] = src_rating['id_tempat_rating'].apply(convert_int)
-    # print(src_rating.info())
     xidr = src_rating['id_tempat_rating']
     xidu = src_rating['userId']
     src_rating['userId'] = le.fit_transform(np.ravel(xidu))
     src_rating['id_tempat_rating'] = le.fit_transform(np.ravel(xidr))
     src_rating = src_rating.sort_index(ascending=False)
-
     data_ratings = Dataset.load_from_df(src_rating[['userId','id_tempat_rating','rating']], reader)
     algo = SVD()
     svd_model = SVD(n_factors= 50, n_epochs= 30, lr_all=0.01, reg_all=0.02)
-
-    # trainset = data_ratings.build_full_trainset()
     trainset, testset = train_test_split(data_ratings, test_size=0.20)
     svd_model.fit(trainset)
     # svd_predictions = svd_model.test(testset)
@@ -622,7 +615,7 @@ def rekomendasi(tempat):
             haversine_distance(src_lat, src_long, row.latitude, row.longitude)
         )
     meta['distance'] = hdistances_km
-    meta = meta[meta.tempat != tempat]
+    # meta = meta[meta.tempat != tempat]
     # meta = meta.sort_values(by='distance', ascending=True)
     meta['distance'] = meta['distance'].round(2)
     
@@ -632,6 +625,9 @@ def rekomendasi(tempat):
         wisatas['est'] = wisatas['id_tempat'].apply(lambda x: svd_model.predict(userId, x).est)
         wisatas = wisatas.sort_values('est', ascending=False)
         print('SWITCH - COLLABORATIVE')
+        # Evaluate CB
+        cross_validate(svd_model, data_ratings, measures=['RMSE'], cv=5, verbose=True)
+
     else:
         # CBF
         sim_scores = list(enumerate(cosine_sim[int(idx)]))
@@ -639,9 +635,12 @@ def rekomendasi(tempat):
         sim_scores = sim_scores[1:30]
 
         wisata_indices = [i[0] for i in sim_scores]
-        
         wisatas = meta.iloc[wisata_indices][['tempat', 'features','id_tempat','id_tempat_rating','jenis','kota','avg_rating','src_img','deskripsi','latitude','longitude','distance']]
+        wisatas = wisatas[wisatas.tempat != tempat]
         print('SWITCH - CONTENT BASED')
+        # Evaluate CBF
+        evaluate_cbf(tempat,cosine_sim,idx)
+
     wisatas = wisatas.head(10)
     
     src_rating['tempat'] = src_rating['tempat'].str.title() # nama tempat
@@ -694,10 +693,6 @@ def rekomendasi(tempat):
 
     arr_category = arr_select_wisata[0][2]
     title = arr_select_wisata[0][5]
-
-    # evaluate
-    evaluate_cbf(tempat,cosine_sim,idx)
-    cross_validate(svd_model, data_ratings, measures=['RMSE'], cv=5, verbose=True)
 
     # Waktu selesai
     end_time = time.time()
