@@ -34,7 +34,7 @@ def start_data():
 def metadata():
     result_meta = start_data()
     meta = pd.DataFrame(result_meta,columns= ['id_tempat','jenis','latitude','longitude','tempat','kota','src_img','deskripsi'])
-    meta = meta.dropna(subset=['jenis'])
+    # meta = meta.dropna(subset=['jenis'])
 
     conn = sqlite3.connect('../../tugas-akhir-local-new.db')
     cursor = conn.cursor()
@@ -61,7 +61,7 @@ def metadata():
 
 def meta_halal():
     cursor = koneksi()
-    cursor.execute('Select id,tempat,img,type,address,latitude,longitude,deskripsi FROM support_place')
+    cursor.execute('Select id,tempat,img,type,address,latitude,longitude,link_gmaps FROM support_place')
     fetch_halal = cursor.fetchall()
     halal = pd.DataFrame(fetch_halal,columns= ['id','tempat','img','type','address','latitude','longitude','city'])
     halal = halal.dropna(subset=['latitude','longitude'])
@@ -82,24 +82,20 @@ def haversine_distance(lat1, lon1, lat2, lon2):
    res = r * (2 * np.arcsin(np.sqrt(a)))
    return np.round(res, 2)
 
-def find_distance():
-    g = geocoder.ip('me')
-    curr_lat = g.lat
-    curr_lon = g.lng
+def find_distance(latitude,longitude):
+    # g = geocoder.ip('me')
+    curr_lat = latitude
+    curr_lon = longitude
     cursor = koneksi()
-    sql_maps = "SELECT tempat,city,latitude, longitude FROM data"
-    cursor.execute(sql_maps)
-    result_maps = cursor.fetchall()
-
+    
     start_lat, start_lon = curr_lat, curr_lon
         
-    cities = pd.DataFrame(result_maps,columns= ['tempat','City','Lat','Lon'])
-    # print(cities.info)
+    cities = metadata()
     cities['tempat'] = cities['tempat'].str.title()
     distances_km = []
     for row in cities.itertuples(index=False):
         distances_km.append(
-            haversine_distance(start_lat, start_lon, row.Lat, row.Lon)
+            haversine_distance(start_lat, start_lon, row.latitude, row.longitude)
         )
     cities['distance'] = distances_km
     return cities
@@ -132,9 +128,7 @@ app = Flask(__name__)
 app.secret_key = "@adenjmn"
 
 @app.route("/")
-def home():
-    arr_meta = metadata().values.tolist()
-    
+def home():    
     if 'id_user' in session:
         msg = "Berhasil masuk"
         user_id = session["id_user"]
@@ -142,9 +136,9 @@ def home():
         cursor = koneksi()
         cursor.execute('SELECT id_user,img_src,status FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
         user = cursor.fetchall()
-        return render_template('index.html', _meta=arr_meta,msg=msg,user=user)
+        return render_template('index.html', msg=msg,user=user)
     else:
-        return render_template('index.html', _meta=arr_meta)
+        return render_template('index.html')
 
 @app.route('/admin')
 def admin():
@@ -620,12 +614,13 @@ def rekomendasi(tempat):
     meta['distance'] = meta['distance'].round(2)
     
     if 'id_user' in session:
-        # CB
+        # CF
         wisatas = meta[['tempat', 'features','id_tempat','id_tempat_rating','jenis','kota','avg_rating','src_img','deskripsi','latitude','longitude','distance']]
         wisatas['est'] = wisatas['id_tempat'].apply(lambda x: svd_model.predict(userId, x).est)
+        wisatas = wisatas[wisatas.tempat != tempat]
         wisatas = wisatas.sort_values('est', ascending=False)
         print('SWITCH - COLLABORATIVE')
-        # Evaluate CB
+        # Evaluate CF
         cross_validate(svd_model, data_ratings, measures=['RMSE'], cv=5, verbose=True)
 
     else:
@@ -642,6 +637,7 @@ def rekomendasi(tempat):
         evaluate_cbf(tempat,cosine_sim,idx)
 
     wisatas = wisatas.head(10)
+    # print(wisatas)
     
     src_rating['tempat'] = src_rating['tempat'].str.title() # nama tempat
     src_reviews = src_rating.loc[src_rating['tempat'] == tempat]
@@ -649,7 +645,7 @@ def rekomendasi(tempat):
     search = meta[['tempat']]
     recS = wisatas.values.tolist()
     
-    arr_meta = search.values.tolist()
+    # arr_meta = search.values.tolist()
     arr_src_reviews = src_reviews.values.tolist()
     
     halal = meta_halal()
@@ -702,18 +698,18 @@ def rekomendasi(tempat):
 
     print(f"Waktu pemrosesan: {processing_time} detik")
 
-
-    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata,_meta=arr_meta, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category,user=user)
+    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category,user=user)
 
 @app.route("/destinasi/")
 @app.route("/destinasi/<filter>")
 def explore(filter = None):
-    meta = metadata()
+    new_data = metadata()
+    
     # cities = find_distance()
     # locale = cities.sort_values(by='distance', ascending=True)
     # data = locale.merge(meta,how="left", on=["tempat"])
-    new_data = meta.dropna(subset=['jenis'])
-    new_data = new_data.sort_index(ascending=False)
+    # new_data = meta.dropna(subset=['jenis'])
+    new_data = new_data.sort_index(ascending=True)
     # _data = new_data.values.tolist()
 
     if 'id_user' in session:
@@ -726,17 +722,72 @@ def explore(filter = None):
     if (filter=='populer'):
         data_trend = new_data.sort_values(by='count_tempat',ascending=False)
         _data = data_trend.values.tolist()
-        return render_template('destinasi.html', data=_data, filter=filter, user=user,_meta=_data)
+        return render_template('destinasi.html', data=_data, filter=filter, user=user)
 
     elif (filter == 'rating'):
         data_rate = new_data.sort_values(by='avg_rating',ascending=False)
         _data = data_rate.values.tolist()
-        return render_template('destinasi.html', data=_data,filter=filter, user=user,_meta=_data)
+        return render_template('destinasi.html', data=_data,filter=filter, user=user)
+    elif (filter == 'terdekat'):
+        if 'location_data' in session:
+            myLat = session['location_data']['latitude']
+            myLong = session['location_data']['longitude']
+            cities = find_distance(myLat,myLong)
+        try:
+            new_data = cities.sort_values(by='distance',ascending=True)
+        except:
+            new_data = new_data.sort_index(ascending=True)
+        _data = new_data.values.tolist()
     else:
         _data = new_data.values.tolist()
     
-    return render_template('destinasi.html', data=_data,filter=filter, user=user,_meta=_data)
+    return render_template('destinasi.html', data=_data,filter=filter, user=user)
 
+@app.route('/deteksi_lokasi', methods=['POST'])
+def deteksi_lokasi():
+    geolocation = request.json  # Menerima data JSON dari permintaan POST
+    print("Received location data from JavaScript:", geolocation)
+    # Lakukan operasi atau kirim respons ke JavaScript
+    response_data = {"message": "Location data received successfully!"}
+    latitude = geolocation['latitude']
+    longitude = geolocation['longitude']
+    session['location_data'] = geolocation
+    # print("SESSION",session['location_data']['latitude'])
+    
+    return jsonify(response_data)
+
+@app.route("/cari", methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        meta = metadata()
+        keyword = request.form['search_query']
+        vectorizer = TfidfVectorizer()
+        tfidf_matrix = vectorizer.fit_transform(meta['tempat'])
+        search_vector = vectorizer.transform([keyword])
+        cosine_similarities = cosine_similarity(search_vector, tfidf_matrix)
+        
+        if 'location_data' in session:
+            myLat = session['location_data']['latitude']
+            myLong = session['location_data']['longitude']
+            dum_meta = find_distance(myLat,myLong)
+            meta['distance'] = dum_meta['distance']
+            meta['cs'] = cosine_similarities[0]
+            meta = meta.sort_values(by='cs',ascending=False).head()
+            meta = meta.sort_values(by='distance',ascending=True)
+        
+        _data = meta.values.tolist()
+        # print(meta.info())
+        if 'id_user' in session:
+            msg = "Berhasil masuk"
+            user_id = session["id_user"]
+
+            cursor = koneksi()
+            cursor.execute('SELECT id_user,img_src,status FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
+            user = cursor.fetchall()
+            return render_template('search.html', data=_data, user=user, keyword=keyword)
+        else:
+            return render_template('search.html', data=_data, keyword=keyword)
+    return render_template('index.html')
 def evaluate_cbf(title,cosine_sim,idx):
     smd = metadata()
     scores_sim = list(enumerate(cosine_sim[idx]))

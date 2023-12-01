@@ -25,37 +25,28 @@
     <div class="container-fluid">
         <div class="row align-items-center py-3 px-xl-5">
           <div class="col-lg-3 d-none d-lg-block">
-            <a href="/" class="text-decoration-none">
-              <img src="{{ url_for('static', filename='img/name_logo.png') }}" width="200" />
+            <a href="" class="text-decoration-none">
+                <img src="{{ url_for('static', filename='img/icon.png') }}" />
+                <span class="badge">Wisata <br> Halal</span>
             </a>
           </div>
+          
           <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form action="/cari" method="POST">
               <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Search for Destinasi"
-                  id="search"
-                  autocomplete="off"
-                />
+                <input type="text" id="search_query" name="search_query" class="form-control"
+                  placeholder="Cari tujuan destinasi" required>
                 <div class="input-group-append">
-                  <span class="input-group-text bg-transparent text-success">
-                    <i class="fa fa-search"></i>
-                  </span>
+                  <button type="submit">
+                    <span class="input-group-text bg-transparent text-success">
+                      <i class="fa fa-search"></i>
+                    </span>
+                  </button>
                 </div>
               </div>
-              <div class="suggestion-list hidden" style="color: black"></div>
             </form>
           </div>
-          {% for list in _meta %}
-          <div id="apps" hidden>
-            <div class="app">
-              <i class="fab fa-apple"></i>
-              <p>{{ list[0] }}</p>
-            </div>
-          </div>
-          {% endfor %}
+
           <div class="col-lg-3 col-6 text-right">
             {% if not session.id_user %}
             <a href="/signup" class="btn border">
@@ -233,7 +224,7 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-mosque" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ mesjid[1] }}</h6>
+                                            <h6><a href="{{ mesjid[7] }}" target="_blank">{{ mesjid[1] }}</a></h6>
                                             <h6><small>{{ mesjid[4] }}</small></h6>
                                             <h6><small>Jarak <i> {{ mesjid[8] }} </i> km</small></h6>
                                         </div>
@@ -250,7 +241,7 @@
                 <div class="tab-pane container active" id="food">
                 {% else %}
                 <div class="tab-pane container fade" id="food">
-                {% endif %}
+                <!-- {% endif %} -->
                     <div class="mb-5 postcard__text">
                         <h4 class="halal_desc">Daftar Restoran terdekat dari {{ title }}</h4>
                         <hr>
@@ -261,7 +252,7 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ makan[1] }}</h6>
+                                            <h6><a href="{{ makan[7] }}" target="_blank">{{ makan[1] }}</a></h6>
                                             <h6><small>{{makan[4]}}</small></h6>
                                             <h6><small>Jarak <i> {{makan[8]}}</i> km</small></h6>
                                         </div>
@@ -285,7 +276,7 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ iplace[1] }}</h6>
+                                            <h6><a href="{{ iplace[7] }}" target="_blank">{{ iplace[1] }}</a></h6>
                                             <h6><small>{{iplace[4]}}</small></h6>
                                             <h6><small>Jarak <i> {{iplace[8]}}</i> km</small></h6>
                                         </div>
@@ -309,7 +300,7 @@
                                     <div class="media mb-4">
                                         <i class="fas fa-utensils" style="width: 45px;height: auto;"></i>
                                         <div class="media-body">
-                                            <h6>{{ iplace[1] }}</h6>
+                                            <h6><a href="{{ iplace[7] }}" target="_blank">{{ iplace[1] }}</a></h6>
                                             <h6><small>{{iplace[4]}}</small></h6>
                                             <h6><small>Jarak <i> {{iplace[8]}}</i> km</small></h6>
                                         </div>

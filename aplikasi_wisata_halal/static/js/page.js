@@ -46,6 +46,7 @@ $(function() {
 
         getPageList(totalPages, currentPage, paginationSize).forEach(item => {
             $("<li>").addClass("page-item").addClass(item ? "current-page" : "dots").toggleClass("active", item === currentPage).append($("<a>").addClass("page-link").attr({ href: "javascript:void(0)" }).text(item || "...")).insertBefore(".next-page");
+            document.documentElement.scrollTop = 0; // Untuk browser modern
         });
 
         $(".previous-page").toggleClass("disable", currentPage === 1);

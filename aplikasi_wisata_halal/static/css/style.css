@@ -233,3 +233,21 @@ body
 hr{
   color: grey;
 }
+
+/* Footer */
+footer {
+  background-color: #696ab4;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-partner {
+  padding: 0 10px;
+}
+
+.logo-partner img {
+  /* max-width: 150px; */
+  max-height: 50px;
+}
