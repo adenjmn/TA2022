@@ -4,6 +4,8 @@ from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 from sklearn.metrics import mean_squared_error
 from surprise import Reader, Dataset, SVD
 from surprise.model_selection import cross_validate, train_test_split
+from surprise.model_selection import KFold
+from collections import defaultdict
 from sklearn.preprocessing import LabelEncoder
 from math import *
 
@@ -537,10 +539,7 @@ def rekomendasi(tempat):
     indices = pd.Series(meta.index, index=meta['tempat'])
     meta['features'] = meta['jenis']
     meta['features'] = meta['features'].str.lower()
-    # meta['features'] = meta['features'].str.replace(r'[^\w\s]+', '')
-    # meta['features'] = meta['features'].str.replace('[#,@,&]', '')
-    # meta['features'] = meta['features'].str.replace('\d+', '')
-    # meta['features'] = meta['features'].str.strip()
+    
     #proses tfid
     tf = TfidfVectorizer(analyzer='word',ngram_range=(1, 2),min_df=0, stop_words=None)
     try:
@@ -550,7 +549,7 @@ def rekomendasi(tempat):
 
     #cosine similarity
     cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
-    
+
     conn = sqlite3.connect('../../tugas-akhir-local-new.db')
     cursor = conn.cursor()
     # collaborative
@@ -574,6 +573,17 @@ def rekomendasi(tempat):
     trainset, testset = train_test_split(data_ratings, test_size=0.20)
     svd_model.fit(trainset)
     # svd_predictions = svd_model.test(testset)
+    kf = KFold(n_splits=5)
+    for trainset, testset in kf.split(data_ratings):
+        algo.fit(trainset)
+        predictions = algo.test(testset)
+        precisions, recalls = precision_recall_at_k(predictions, k=5, threshold=4)
+
+        # Precision and recall can then be averaged over all users
+        print("PRECISION")
+        print(sum(prec for prec in precisions.values()) / len(precisions))
+        # print("RECALL")
+        # print(sum(rec for rec in recalls.values()) / len(recalls))
 
     # hybrid filtering
     store = meta[['id_tempat_rating','id_tempat']]
@@ -619,24 +629,28 @@ def rekomendasi(tempat):
         wisatas['est'] = wisatas['id_tempat'].apply(lambda x: svd_model.predict(userId, x).est)
         wisatas = wisatas[wisatas.tempat != tempat]
         wisatas = wisatas.sort_values('est', ascending=False)
+        wisatas = wisatas.head(10)
         print('SWITCH - COLLABORATIVE')
         # Evaluate CF
         cross_validate(svd_model, data_ratings, measures=['RMSE'], cv=5, verbose=True)
 
     else:
         # CBF
+        threshold = 0.5
         sim_scores = list(enumerate(cosine_sim[int(idx)]))
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-        sim_scores = sim_scores[1:30]
-
+        sim_scores = sim_scores[:30]
         wisata_indices = [i[0] for i in sim_scores]
+        cosine = [i[1] for i in sim_scores]
         wisatas = meta.iloc[wisata_indices][['tempat', 'features','id_tempat','id_tempat_rating','jenis','kota','avg_rating','src_img','deskripsi','latitude','longitude','distance']]
+        wisatas['cosine'] = cosine
+        wisatas = wisatas[wisatas['cosine'] > threshold]
         wisatas = wisatas[wisatas.tempat != tempat]
         print('SWITCH - CONTENT BASED')
         # Evaluate CBF
         evaluate_cbf(tempat,cosine_sim,idx)
 
-    wisatas = wisatas.head(10)
+    
     # print(wisatas)
     
     src_rating['tempat'] = src_rating['tempat'].str.title() # nama tempat
@@ -704,13 +718,7 @@ def rekomendasi(tempat):
 @app.route("/destinasi/<filter>")
 def explore(filter = None):
     new_data = metadata()
-    
-    # cities = find_distance()
-    # locale = cities.sort_values(by='distance', ascending=True)
-    # data = locale.merge(meta,how="left", on=["tempat"])
-    # new_data = meta.dropna(subset=['jenis'])
     new_data = new_data.sort_index(ascending=True)
-    # _data = new_data.values.tolist()
 
     if 'id_user' in session:
         user_id = session["id_user"]
@@ -728,6 +736,7 @@ def explore(filter = None):
         data_rate = new_data.sort_values(by='avg_rating',ascending=False)
         _data = data_rate.values.tolist()
         return render_template('destinasi.html', data=_data,filter=filter, user=user)
+        
     elif (filter == 'terdekat'):
         if 'location_data' in session:
             myLat = session['location_data']['latitude']
@@ -772,11 +781,17 @@ def search():
             dum_meta = find_distance(myLat,myLong)
             meta['distance'] = dum_meta['distance']
             meta['cs'] = cosine_similarities[0]
-            meta = meta.sort_values(by='cs',ascending=False).head()
+            meta = meta[meta['cs'] > 0]
+            cosim = meta.sort_values(by='cs',ascending=False)
+            new_meta = cosim.head(1)
             meta = meta.sort_values(by='distance',ascending=True)
-        
-        _data = meta.values.tolist()
-        # print(meta.info())
+            merges = pd.concat([new_meta, meta], ignore_index=True)
+            merges = merges.drop_duplicates(subset='id_tempat', keep='first')
+            _data = merges.values.tolist()
+            
+        else:
+            _data = meta.values.tolist()
+
         if 'id_user' in session:
             msg = "Berhasil masuk"
             user_id = session["id_user"]
@@ -804,6 +819,45 @@ def evaluate_cbf(title,cosine_sim,idx):
     rmse_cbf = np.sqrt(mean_squared_error(actual_scores, predicted_scores))
 
     return print("Evaluating RMSE of algorithm cosine similarity",rmse_cbf)
+
+def precision_recall_at_k(predictions, k=10, threshold=3.5):
+    """Return precision and recall at k metrics for each user"""
+
+    # First map the predictions to each user.
+    user_est_true = defaultdict(list)
+    for uid, _, true_r, est, _ in predictions:
+        user_est_true[uid].append((est, true_r))
+
+    precisions = dict()
+    recalls = dict()
+    for uid, user_ratings in user_est_true.items():
+
+        # Sort user ratings by estimated value
+        user_ratings.sort(key=lambda x: x[0], reverse=True)
+
+        # Number of relevant items
+        n_rel = sum((true_r >= threshold) for (_, true_r) in user_ratings)
+
+        # Number of recommended items in top k
+        n_rec_k = sum((est >= threshold) for (est, _) in user_ratings[:k])
+
+        # Number of relevant and recommended items in top k
+        n_rel_and_rec_k = sum(
+            ((true_r >= threshold) and (est >= threshold))
+            for (est, true_r) in user_ratings[:k]
+        )
+
+        # Precision@K: Proportion of recommended items that are relevant
+        # When n_rec_k is 0, Precision is undefined. We here set it to 0.
+
+        precisions[uid] = n_rel_and_rec_k / n_rec_k if n_rec_k != 0 else 0
+
+        # Recall@K: Proportion of relevant items that are recommended
+        # When n_rel is 0, Recall is undefined. We here set it to 0.
+
+        recalls[uid] = n_rel_and_rec_k / n_rel if n_rel != 0 else 0
+
+    return precisions, recalls
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -15,85 +15,89 @@
 
 <body>
 
-  <body>
-    <div id="menu-overlay"></div>
-    <div id="menu-toggle" class="closed" data-title="Menu">
-      <i class="fa fa-bars"></i>
-      <i class="fa fa-times"></i>
-    </div>
-    <header id="main-header">
-      <nav id="sidenav">
-        <div id="sidenav-header">
-          <div id="profile-picture">
-            <img src="{{ url_for('static', filename='img/admin.png') }}" />
-          </div>
-          {% for i in user %}
-          <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
-          {% endfor %}
+
+  <div id="menu-overlay"></div>
+  <div id="menu-toggle" class="closed" data-title="Menu">
+    <i class="fa fa-bars"></i>
+    <i class="fa fa-times"></i>
+  </div>
+  <header id="main-header">
+    <nav id="sidenav">
+      <div id="sidenav-header">
+        <div id="profile-picture">
+          <img src="{{ url_for('static', filename='img/admin.png') }}" />
         </div>
-        <ul id="main-nav">
-          <li>
-            <a href="../admin">
-              <i class="fa fa-home"></i>
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a href="/admin/destination">
-              <i class="fa fa-landmark"></i>
-              Destinasi
-            </a>
-          </li>
-          <li>
-            <a href="/admin/place">
-              <i class="fa fa-place-of-worship"></i>
-              Tempat Pendukung 
-            </a>
-          </li>
-          <li class="active">
-            <a href="/admin/member">
-              <i class="fa fa-user-lock"></i>
-              Admin
-            </a>
-          </li>
-          <li>
-            <a href="/logout">
-              <i class="fa fa-sign-out-alt"></i>
-              Keluar
-            </a>
-          </li>
-        </ul>
-      </nav>
+        {% for i in user %}
+        <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
+        {% endfor %}
+      </div>
+      <ul id="main-nav">
+        <li>
+          <a href="../admin">
+            <i class="fa fa-home"></i>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="/admin/destination">
+            <i class="fa fa-landmark"></i>
+            Destinasi
+          </a>
+        </li>
+        <li>
+          <a href="/admin/place">
+            <i class="fa fa-place-of-worship"></i>
+            Tempat Pendukung
+          </a>
+        </li>
+        <li class="active">
+          <a href="/admin/member">
+            <i class="fa fa-user-lock"></i>
+            Admin
+          </a>
+        </li>
+        <li>
+          <a href="/logout">
+            <i class="fa fa-sign-out-alt"></i>
+            Keluar
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-    </header>
-    <section id="content" class="form-style">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="./member" style="text-decoration:none">Kelola admin</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Tambah</li>
-        </ol>
-      </nav>
+  </header>
+  <section id="content" class="form-style">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="./member" style="text-decoration:none">Kelola admin</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tambah</li>
+      </ol>
+    </nav>
 
-      <form action="/admin/add_member/new" method="POST">
-        <div class="section">Daftarkan admin</div>
-        <div class="inner-wrap">
-          <label class="id" id="id" for="id">ID Admin</label>
-          <input class="form-control form-control-sm" name="id" type="number" aria-label=".form-control-sm example" autocomplete="off" required>
-          <label class="name" id="name" for="name">Nama</label>
-          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example" autocomplete="off" required>
-          <label>Password</label>
-          <input class="form-control form-control-sm" name="password" type="password" aria-label=".form-control-sm example" autocomplete="off" required>
-        </div>
-        <div class="section"><button type="submit" class="btn btn-primary">Daftar</button></div>
-      </form>
-    </section>
+    <form action="/admin/add_member/new" method="POST">
+      <div class="section">Daftarkan admin</div>
+      <div class="inner-wrap">
+        <label class="id" id="id" for="id">ID Admin</label>
+        <input class="form-control form-control-sm" name="id" type="number" aria-label=".form-control-sm example"
+          autocomplete="off" required>
+        <label class="name" id="name" for="name">Nama</label>
+        <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example"
+          autocomplete="off" required>
+        <label>Password</label>
+        <input class="form-control form-control-sm" name="password" type="password"
+          aria-label=".form-control-sm example" autocomplete="off" required>
+      </div>
+      <div class="section"><button type="submit" class="btn btn-primary">Daftar</button></div>
+    </form>
+  </section>
 
-    <footer></footer>
+  <footer></footer>
+  <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script src="{{ url_for('static', filename='js/admin_destination.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js"></script>
+  <script src="{{ url_for('static', filename='js/maps.js') }}"></script>
 
-    <script src="{{ url_for('static', filename='js/admin_destination.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
-    <script src="{{ url_for('static', filename='js/maps.js') }}"></script>
-
-  </body>
+</body>
 
 </html>

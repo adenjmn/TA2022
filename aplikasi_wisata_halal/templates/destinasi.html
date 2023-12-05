@@ -5,11 +5,7 @@
   <meta charset="utf-8">
   <title>Explore - Wisata Halal</title>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <meta content="Free HTML Templates" name="keywords">
-  <meta content="Free HTML Templates" name="description">
-
-  <!-- Favicon -->
-  <link href="img/favicon.ico" rel="icon">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon.png') }}" type="image/svg+xml">
 
   <!-- Google Web Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -44,7 +40,7 @@
       <div class="col-lg-6 col-6 text-left">
         <form action="/cari" method="POST">
           <div class="input-group">
-            <input type="text" id="search_query" name="search_query" class="form-control" placeholder="Cari tujuan destinasi" required>
+            <input type="text" id="search_query" name="search_query" class="form-control" placeholder="Cari tujuan destinasi" autocomplete="off" required>
             <div class="input-group-append">
               <button type="submit">
                 <span class="input-group-text bg-transparent text-success">

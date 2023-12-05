@@ -1,7 +1,3 @@
-/*-----------------------------------*\
- * #style.css
-\*-----------------------------------*/
-
 :root {  
     /**
      * transition
@@ -63,7 +59,12 @@
   \*-----------------------------------*/
   
   /* .container { padding-inline: 15px; } */
-  
+  .keyword p {
+    font-size: 22px;
+  }
+  .keyword p span{
+    color: gray;
+  }
   /*-----------------------------------*\
    * #PACKAGE
   \*-----------------------------------*/
@@ -88,38 +89,44 @@
     object-fit: cover;
   }
   
-  .package-card .card-content { padding: 30px 20px; }
+  .package-card .card-content { 
+    background-color: #F2F1F1;
+    padding: 30px 20px; 
+  }
   
   .package-card .card-title { margin-bottom: 15px; }
+  .package-card .card-title:hover { 
+    color: #bdbb49;
+  }
   
   .package-card .card-text {
+    color: #424242;
     line-height: 1.6;
     margin-bottom: 20px;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
   
   .card-meta-list {
-    background: var(--white);
+    background: #F2F1F1;
     max-width: max-content;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 9px;
     box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.15);
     border-radius: 50px;
   }
+  .card-meta-list:hover{
+    background-color: #d6d7f7;
+  }
   
   .card-meta-item { position: relative; }
-  
-  /* .card-meta-item:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 4px;
-    right: -1px;
-    bottom: 4px;
-    width: 1px;
-    background: hsla(0, 0%, 0%, 0.3);
-  } */
   
   .meta-box {
     display: flex;
@@ -127,8 +134,13 @@
     align-items: center;
     gap: 5px;
     padding-inline: 9px;
-    color: grey;
-    font-size: 11px;
+    color: #080808;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .meta-box i{
+    font-weight: 900;
+    color: #371B58;
   }
   
   .package-card .card-review {

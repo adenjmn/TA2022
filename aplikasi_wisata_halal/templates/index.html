@@ -6,7 +6,6 @@
   <title>Wisata Halal</title>
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-  <!-- Favicon -->
   <link rel="icon" href="{{ url_for('static', filename='img/icon.png') }}" type="image/svg+xml">
 
   <!-- Google Web Fonts -->
@@ -44,7 +43,7 @@
         <form action="/cari" method="POST">
           <div class="input-group">
             <input type="text" id="search_query" name="search_query" class="form-control"
-              placeholder="Cari tujuan destinasi" required>
+              placeholder="Cari tujuan destinasi" autocomplete="off" required>
             <div class="input-group-append">
               <button type="submit">
                 <span class="input-group-text bg-transparent text-success">
@@ -210,16 +209,15 @@
     </div> -->
   <!-- Package End -->
   <!-- footer -->
-    <footer>
-      <div class="logo-partner">
-          <img src="{{ url_for('static', filename='img/icon.png') }}"  alt="Partner 1"/>
-      </div>
-      <div class="logo-partner">
-        <img src="{{ url_for('static', filename='img/logo_uin.png') }}"  alt="Partner 2"/>
-      </div>
-      <div class="logo-partner">
-        <img src="{{ url_for('static', filename='img/logo_kemenparekraf.png') }}"  alt="Partner 2"/>
-      </div>
+  <footer>
+    <div class="logo-partner">
+      <img src="{{ url_for('static', filename='img/icon.png') }}" alt="Partner 1" />
+      <img src="{{ url_for('static', filename='img/logo_uin.png') }}" alt="Partner 2" />
+    </div>
+    <div class="logo-partner">
+      <img src="{{ url_for('static', filename='img/logo_halal.png') }}" alt="Partner 2" />
+      <img src="{{ url_for('static', filename='img/logo_kemenparekraf.png') }}" alt="Partner 2" />
+    </div>
   </footer>
 
   <!-- JavaScript Libraries -->

@@ -10,129 +10,134 @@
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css'>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css')}}">
+  <!-- Include Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Include Leaflet JavaScript -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 </head>
 
+<!-- partial:index.partial.html -->
+
 <body>
-  <!-- partial:index.partial.html -->
+  <div id="menu-overlay"></div>
+  <div id="menu-toggle" class="closed" data-title="Menu">
+    <i class="fa fa-bars"></i>
+    <i class="fa fa-times"></i>
+  </div>
+  <header id="main-header">
+    <nav id="sidenav">
+      <div id="sidenav-header">
+        <div id="profile-picture">
+          <img src="{{ url_for('static', filename='img/admin.png') }}" />
+        </div>
+        {% for i in user %}
+        <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
+        {% endfor %}
+      </div>
+      <ul id="main-nav">
+        <li>
+          <a href="../admin">
+            <i class="fa fa-home"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="active">
+          <a href="/admin/destination">
+            <i class="fa fa-landmark"></i>
+            Destinasi
+          </a>
+        </li>
+        <li>
+          <a href="/admin/place">
+            <i class="fa fa-place-of-worship"></i>
+            Tempat Pendukung
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-user-lock"></i>
+            Admin
+          </a>
+        </li>
+        <li>
+          <a href="/logout">
+            <i class="fa fa-sign-out-alt"></i>
+            Keluar
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <body>
-    <div id="menu-overlay"></div>
-    <div id="menu-toggle" class="closed" data-title="Menu">
-      <i class="fa fa-bars"></i>
-      <i class="fa fa-times"></i>
-    </div>
-    <header id="main-header">
-      <nav id="sidenav">
-        <div id="sidenav-header">
-          <div id="profile-picture">
-            <img src="{{ url_for('static', filename='img/admin.png') }}"/>
-          </div>
-          {% for i in user %}
-          <a href="/admin/member/{{i[0]}}" id="profile-link">{{i[1]}}</a>
+  </header>
+  <section id="content" class="form-style">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="destination" style="text-decoration:none">Destinasi</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tambah Destinasi Wisata </li>
+      </ol>
+    </nav>
+    {% if pesan == "": %}
+    {% else %}
+    <h3>{{pesan}}</h3>
+    <p>Pastikan ID destinasi berbeda</p>
+    {% endif %}
+
+    <form action="/admin/add_destination/new" method="POST">
+      <div class="section"><span>1</span>Destinasi</div>
+      <div class="inner-wrap">
+        <label class="id" id="id" for="id">ID Destinasi</label>
+        <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example"
+          required>
+
+        <label class="name" id="name" for="name">Nama</label>
+        <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example"
+          required>
+
+        <label class="type" id="type" for="type">Jenis</label>
+        <select class="form-select form-select-sm" aria-label=".form-select-sm example" required name="types">
+          {% for i in types %}
+          <option value="{{i[0]}}">{{i[0]}}</option>
           {% endfor %}
-        </div>
-        <ul id="main-nav">
-          <li>
-            <a href="../admin">
-              <i class="fa fa-home"></i>
-              Dashboard
-            </a>
-          </li>
-          <li class="active">
-            <a href="/admin/destination">
-              <i class="fa fa-landmark"></i>
-              Destinasi
-            </a>
-          </li>
-          <li>
-            <a href="/admin/place">
-              <i class="fa fa-place-of-worship"></i>
-              Tempat Pendukung
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-user-lock"></i>
-              Admin
-            </a>
-          </li>
-          <li>
-            <a href="/logout">
-              <i class="fa fa-sign-out-alt"></i>
-              Keluar
-            </a>
-          </li>
-        </ul>
-      </nav>
+        </select>
 
-    </header>
-    <section id="content" class="form-style">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="destination" style="text-decoration:none">Destinasi</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Tambah Destinasi Wisata </li>
-        </ol>
-      </nav>
-      {% if pesan == "": %}
-      {% else %}
-      <h3>{{pesan}}</h3>
-      <p>Pastikan ID destinasi berbeda</p>
-      {% endif %}
+        <label></label>
+        <label class="img" id="img" for="img">Link Gambar</label>
+        <input class="form-control form-control-sm" value="" name="img" type="text"
+          aria-label=".form-control-sm example" required>
 
-      <form action="/admin/add_destination/new" method="POST">
-        <div class="section"><span>1</span>Destinasi</div>
-        <div class="inner-wrap">
-          <label class="id" id="id" for="id">ID Destinasi</label>
-          <input class="form-control form-control-sm" name="id" type="text" aria-label=".form-control-sm example" required>
+        <label class="desc" id="desc" for="desc">Deskripsi</label>
+        <textarea class="form-control form-control-sm" name="desc" rows="4" required></textarea>
+      </div>
+      <div class="section"><span>2</span>Lokasi - Kota &amp; Koordinat</div>
+      <div class="inner-wrap">
+        <label class="city" id="city" for="city">Kota</label>
+        <input class="form-control form-control-sm" value="" name="city" type="text"
+          aria-label=".form-control-sm example" required>
+      </div>
+      <div class="inner-wrap">
+        <label class="coordinate" id="coordinate" for="coordinate">Koordinat</label>
+        <div id="map" style="height: 400px;"></div>
+        <p>Latitude : <span id="info_lat"></span></p>
+        <p>Longitude : <span id="info_lon"></span></p>
+        
+        <input class="form-control form-control-sm" name="lat" type="hidden" aria-label=".form-control-sm example">
+        <input class="form-control form-control-sm" name="lon" type="hidden" aria-label=".form-control-sm example">
+      </div>
 
-          <label class="name" id="name" for="name">Nama</label>
-          <input class="form-control form-control-sm" name="name" type="text" aria-label=".form-control-sm example" required>
+      <div class="section"><button type="submit" class="btn btn-primary">Tambah</button></div>
 
-          <label class="type" id="type" for="type">Jenis</label>
-          <select class="form-select form-select-sm" aria-label=".form-select-sm example" required name="types">
-            {% for i in types %}
-            <option value="{{i[0]}}">{{i[0]}}</option>
-            {% endfor %}
-          </select>
+    </form>
 
-          <label></label>
-          <label class="img" id="img" for="img">Link Gambar</label>
-          <input class="form-control form-control-sm" value="" name="img" type="text"
-            aria-label=".form-control-sm example" required>
+  </section>
 
-          <label class="desc" id="desc" for="desc">Deskripsi</label>
-          <textarea class="form-control form-control-sm" name="desc" rows="4"required></textarea>
-        </div>
-        <div class="section"><span>2</span>Lokasi - Kota &amp; Koordinat</div>
-        <div class="inner-wrap">
-          <label class="city" id="city" for="city">Kota</label>
-          <input class="form-control form-control-sm" value="" name="city" type="text"
-            aria-label=".form-control-sm example" required>
-        </div>
-        <div class="inner-wrap">
-          <label class="coordinate" id="coordinate" for="coordinate">Koordinat</label>
-          <div id="mapCanvas" class="inner-wrap"></div>
-          <b>Latitude:</b>
-          <div id="info_lat"></div>
-          <b>Longitude:</b>
-          <div id="info_lon"></div>
-          <input class="form-control form-control-sm" name="lat" type="hidden" aria-label=".form-control-sm example">
-          <input class="form-control form-control-sm" name="lon" type="hidden" aria-label=".form-control-sm example">
-        </div>
+  <footer></footer>
 
-        <div class="section"><button type="submit" class="btn btn-primary">Tambah</button></div>
+  <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script src="{{ url_for('static', filename='js/admin_destination.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/maps.js') }}"></script>
 
-      </form>
-
-    </section>
-
-    <footer></footer>
-
-    <script src="{{ url_for('static', filename='js/admin_destination.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
-    <script src="{{ url_for('static', filename='js/maps.js') }}"></script>
-
-  </body>
+</body>
 
 </html>

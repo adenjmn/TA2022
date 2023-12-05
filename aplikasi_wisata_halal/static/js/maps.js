@@ -1,100 +1,46 @@
-var geocoder = new google.maps.Geocoder();
+var map = L.map('map').setView([-6.9217, 107.6071], 10);
 
-function geocodePosition(pos) {
-    geocoder.geocode({
-        latLng: pos
-    }, function (responses) {
-        if (responses && responses.length > 0) {
-            updateMarkerAddress(responses[0].formatted_address);
-        } else {
-            updateMarkerAddress('Cannot determine address at this location.');
-        }
-    });
-}
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-function updateMarkerStatus(str) {
-    document.getElementById('markerStatus').innerHTML = str;
-}
-
-function updateMarkerPosition(latLng) {
-    var info_lat = document.getElementById('info_lat').innerHTML = latLng.lat();
-    var info_lon = document.getElementById('info_lon').innerHTML = latLng.lng();
-
-    let lat = document.querySelector('input[name="lat"]');
-    let lon = document.querySelector('input[name="lon"]');
-    lat.value = info_lat;
-    lon.value = info_lon;
-    // document.getElementById("demo").value = info_lat;
-}
-
-function updateMarkerAddress(str) {
-    document.getElementById('address').innerHTML = str;
-}
-
-function updateMarkerURL(str) {
-    var pos = [str.lat(), str.lng()].join(',');
-    var link = "https://www.google.com/maps/place/@" + pos;
-
-    var htmlLink = document.getElementById("url");
-    htmlLink.innerHTML = "Open Maps";
-    htmlLink.setAttribute('href', link);
-}
-
-function initialize() {
-    var latLng = new google.maps.LatLng(-6.1312767, 106.8001397);
-    var map = new google.maps.Map(document.getElementById('mapCanvas'), {
-        zoom: 15,
-        center: latLng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        streetViewControl: false
+    // Tambahkan peta OSM sebagai layer
+    var canvasIcon = L.divIcon({
+      className: 'canvas-marker',
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      html: '<canvas width="30" height="30"></canvas>'
     });
 
-    var image = 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/64/Map-Marker-Marker-Outside-Chartreuse.png';
+    var canvasMarker = L.marker([0, 0], { icon: canvasIcon }).addTo(map);
 
-    var marker = new google.maps.Marker({
-        position: latLng,
-        title: 'Posisi Saya',
-        map: map,
-        draggable: false,
-        icon: image,
-    });
-    // Update current position info.
-    updateMarkerPosition(latLng);
-    geocodePosition(latLng);
+    // Ambil konteks elemen canvas
+    var canvas = canvasMarker._icon.querySelector('canvas');
+    var context = canvas.getContext('2d');
 
-    // Add dragging event listeners.
-    //           google.maps.event.addListener(marker, 'dragstart', function() {
-    //             updateMarkerAddress('Dragging...');
-    //           });
+    // Gambar bentuk pin pada elemen canvas
+    context.beginPath();
+    context.moveTo(15, 0);
+    context.lineTo(30, 30);
+    context.lineTo(0, 30);
+    context.fillStyle = 'purple';
+    context.fill();
 
-    //           google.maps.event.addListener(marker, 'drag', function() {
-    //             updateMarkerStatus('Dragging...');
-    //             updateMarkerPosition(marker.getPosition());
-    //           });
+    // Fungsi untuk menanggapi klik pada peta
+    function onMapClick(e) {
+      var clickedLatLng = e.latlng;
 
-    //           google.maps.event.addListener(marker, 'dragend', function() {
-    //             updateMarkerStatus('Drag ended');
-    //             geocodePosition(marker.getPosition());
-    //           });
+      // Atur posisi marker pada koordinat yang diklik
+      canvasMarker.setLatLng(clickedLatLng);
 
-    map.addListener('center_changed', function () {
-        marker.setPosition(map.getCenter());
-        //updateMarkerStatus('Center of Map');
-        geocodePosition(marker.getPosition());
-        updateMarkerPosition(marker.getPosition());
-        updateMarkerURL(marker.getPosition());
-    });
-
-    if (navigator.geolocation) {
-
-        navigator.geolocation.getCurrentPosition(function (position) {
-            user_location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            map.setCenter(user_location);
-        });
-    } else {
-        /* Browser doesn't support Geolocation */
+      // Tampilkan koordinat yang dipilih
+      document.getElementById('info_lat').textContent = clickedLatLng.lat.toFixed(10);
+      document.getElementById('info_lon').textContent = clickedLatLng.lng.toFixed(10);
+      let lat = document.querySelector('input[name="lat"]');
+      let lon = document.querySelector('input[name="lon"]');
+      lat.value = clickedLatLng.lat.toFixed(10);
+      lon.value = clickedLatLng.lng.toFixed(10);
     }
-}
 
-// Onload handler to fire off the app.
-google.maps.event.addDomListener(window, 'load', initialize);
+    // Tambahkan event click pada peta
+    map.on('click', onMapClick);
