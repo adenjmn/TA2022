@@ -2,22 +2,16 @@
     /**
      * transition
      */
-  
     --transition: 0.25s ease-in-out;
-  
     /**
      * spacing
      */
-  
     --section-padding: 60px;
-  
     /**
      * border-radius
      */
-  
     --radius-15: 15px;
     --radius-25: 25px;
-  
   }
   
   /*-----------------------------------*\
@@ -40,6 +34,7 @@
     background: none;
     border: none;
     font: inherit;
+    z-index: 2;
   }
   
   button { cursor: pointer; }
@@ -53,6 +48,27 @@
   }
   
   body { background: white; }
+  
+  .suggestion-list {
+    background-color: #ffff;
+    padding: 18px 24px 6px 12px;
+    border-radius: 0 0 6px 6px;
+    position: absolute;
+    width: 100%;
+    padding-top: 50px;
+    border: 2px solid #ffff;
+    border-top: none;
+    display: inline-block;
+    z-index: 2;
+  }
+  
+  .suggestion-list.hidden {
+    display: none;
+  }
+  
+  .suggestion-list p {
+    margin-bottom: 12px;
+  }
   
   /*-----------------------------------*\
    * #REUSED STYLE

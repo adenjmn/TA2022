@@ -105,7 +105,7 @@ body
 }
 
 /*---------------------
-  Shop Details
+  RECS Details
 -----------------------*/
 
 .product-details {
@@ -118,6 +118,7 @@ body
 
 .product__details__pic__item img {
   min-width: 100%;
+  height: auto;
 }
 
 .product__details__text h3 {
@@ -233,7 +234,9 @@ body
 hr{
   color: grey;
 }
-
+.src {
+  color: #0d6efd;
+}
 /* Footer */
 footer {
   background-color: #527853;
@@ -241,6 +244,12 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+footer ul li a{
+  color: #ebebeb;
+}
+footer ul li a:hover{
+  color: #EDBB0E;
 }
 
 .logo-partner {
@@ -250,4 +259,11 @@ footer {
 .logo-partner img {
   /* max-width: 150px; */
   max-height: 50px;
+}
+.tentang-img{
+  text-align: center;
+  margin: 40px;
+}
+.tentang-img img{
+  height: 80px;
 }

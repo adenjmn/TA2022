@@ -1,5 +1,5 @@
 var all_apps = document.querySelectorAll('.app');
-var search = document.querySelector('#search');
+var search = document.querySelector('#search_query');
 var listContainer = document.querySelector('.suggestion-list');
 
 var app_list = [];
@@ -38,7 +38,7 @@ function generateAppList(event) {
   if (filteredList.length === 0) {
     let paragraph = document.createElement('p');
     paragraph.innerText = 'No items matched your search';
-    fragment.appendChild(paragraph);
+    // fragment.appendChild(paragraph);
   }
 
   else {

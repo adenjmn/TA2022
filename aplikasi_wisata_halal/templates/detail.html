@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/rekomendasi.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -23,67 +24,75 @@
 <body>
     <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-chevron-up"></i></button>
     <!-- Topbar Start -->
-    <div class="container-fluid">
-        <div class="row align-items-center py-3 px-xl-5">
-          <div class="col-lg-3 d-none d-lg-block">
-            <a href="" class="text-decoration-none">
-                <img src="{{ url_for('static', filename='img/icon.png') }}" />
-                <span class="badge">Wisata <br> Halal</span>
-            </a>
-          </div>
-          
-          <div class="col-lg-6 col-6 text-left">
-            <form action="/cari" method="POST">
-              <div class="input-group">
-                <input type="text" id="search_query" name="search_query" class="form-control" placeholder="Cari tujuan destinasi" autocomplete="off" required>
-                <div class="input-group-append">
-                  <button type="submit">
-                    <span class="input-group-text bg-transparent text-success">
-                      <i class="fa fa-search"></i>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <div class="col-lg-3 col-6 text-right">
-            {% if not session.id_user %}
-            <a href="/signup" class="btn border">
-              <i class="fas fa-user text-info"></i>
-              <span class="badge">Sign Up</span>
-            </a>
-            <a href="/signin" class="btn border">
-              <i class="fas fa-user text-info"></i>
-              <span class="badge">Login</span>
-            </a>
-            {% else %}
-            <div class="dropdown">
-              {% for user in user %}
-              <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                {% if user[1] == 'default' %}
-                <img src ="{{ url_for('static', filename='img/user.jpg') }}"  width="70" class="rounded-circle"/>
-                {% elif user[1] == 'default_admin' %}
-                <img src ="{{ url_for('static', filename='img/admin.png') }}"  width="40" class="rounded-circle"/>
-                {% else %}
-                <img src ="{{ user[1] }}"  width="40" height="40" class="rounded-circle"              />
-                {% endif %}
+  <div class="container-fluid">
+    <div class="row align-items-center py-3 px-xl-5">
+      <div class="col-lg-3 d-none d-lg-block">
+        <a href="" class="text-decoration-none">
+          <img src="{{ url_for('static', filename='img/icon.png') }}" />
+          <span class="badge">Wisata <br> Halal</span>
+        </a>
+      </div>
+      <div class="col-lg-6 col-6 text-left">
+        <form action="/cari" method="POST">
+          <div class="input-group">
+            <input type="text" id="search_query" name="search_query" class="form-control" placeholder="Cari tujuan destinasi" autocomplete="off" required>
+            <div class="suggestion-list hidden"></div>
+            <div class="input-group-append">
+              <button type="submit">
+                <span class="input-group-text bg-transparent text-success"><i class="fa fa-search"></i>
+                </span>
               </button>
-              
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="/user">History</a></li>
-                {% if user[2] == 'Admin' %}
-                <li><a class="dropdown-item" href="/admin">Admin Menu</a></li>
-                {% endif %}
-                <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              </ul>
-              {% endfor %}
             </div>
-            {% endif %}
           </div>
+        </form>
+      </div>
+      
+      <div class="col-lg-3 col-6 text-right">
+        {% if not session.id_user %}
+        <a href="/signup" class="btn border">
+          <i class="fas fa-user text-info"></i>
+          <span class="badge">Sign Up</span>
+        </a>
+        <a href="/signin" class="btn border">
+          <i class="fas fa-user text-info"></i>
+          <span class="badge">Login</span>
+        </a>
+        {% else %}
+        <div class="dropdown">
+          {% for user in user %}
+          <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {% if user[1] == 'default' %}
+            <img src="{{ url_for('static', filename='img/user.jpg') }}" width="70" class="rounded-circle" />
+            {% elif user[1] == 'default_admin' %}
+            <img src="{{ url_for('static', filename='img/admin.png') }}" width="40" class="rounded-circle" />
+            {% else %}
+            <img src="{{ user[1] }}" width="40" height="40" class="rounded-circle" />
+            {% endif %}
+          </button>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="/user">History</a></li>
+            {% if user[2] == 'Admin' %}
+            <li><a class="dropdown-item" href="/admin">Admin Menu</a></li>
+            {% endif %}
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+          {% endfor %}
         </div>
+        {% endif %}
+      </div>
     </div>
-    <!-- Topbar End -->
+  </div>
+  {% for list in search %}
+  <div id="apps" hidden>
+    <div class="app">
+      <i class="fab fa-apple"></i>
+      <p>{{ list[4] }}</p>
+    </div>
+  </div>
+  {% endfor %}
+  <!-- Topbar End -->
    
     <div class="container-fluid mb-5">
         <div class="row border-top px-xl-5">
@@ -110,7 +119,7 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="product__details__pic">
                                     <div class="product__details__pic__item">
-                                        <img class="product__details__pic__item--large"
+                                        <img class="product__details__pic__item--large img-fluid"
                                             src="{{ select[7] }}" alt="">
                                     </div>
                                 </div>
@@ -444,13 +453,16 @@
     <!-- partial -->
     <footer>
         <div class="logo-partner">
-            <img src="{{ url_for('static', filename='img/icon.png') }}" alt="Partner 1" />
-            <img src="{{ url_for('static', filename='img/logo_uin.png') }}" alt="Partner 2" />
+          <img src="{{ url_for('static', filename='img/icon.png') }}" alt="Partner 1" />
+          <img src="{{ url_for('static', filename='img/logo_uin.png') }}" alt="Partner 2" />
         </div>
         <div class="logo-partner">
-            <img src="{{ url_for('static', filename='img/logo_halal.png') }}" alt="Partner 2" />
-            <img src="{{ url_for('static', filename='img/logo_kemenparekraf.png') }}" alt="Partner 2" />
+          <img src="{{ url_for('static', filename='img/logo_halal.png') }}" alt="Partner 2" />
+          <img src="{{ url_for('static', filename='img/logo_kemenparekraf.png') }}" alt="Partner 2" />
         </div>
+        <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+          <li class="ms-3"><a href="/tentang">Tentang</a></li>
+        </ul>
     </footer>
 
     <script  src="{{ url_for('static', filename='js/search.js') }}"></script>

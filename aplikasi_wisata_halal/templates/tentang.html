@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Wisata Halal - Tentang</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <link rel="icon" href="{{ url_for('static', filename='img/icon.png') }}" type="image/svg+xml">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" />
+    <!-- <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> -->
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <!-- <link href="css/home.css" rel="stylesheet"> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+                    <img src="{{ url_for('static', filename='img/icon.png') }}" />
+                    <span class="badge">Wisata <br> Halal</span>
+                </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="/cari" method="POST">
+                    <div class="input-group">
+                        <input type="text" id="search_query" name="search_query" class="form-control"
+                            placeholder="Cari tujuan destinasi" autocomplete="off" required>
+                        <div class="input-group-append">
+                            <button type="submit">
+                                <span class="input-group-text bg-transparent text-success">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="suggestion-list hidden" style="color: black"></div>
+                </form>
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+                {% if not session.id_user %}
+                <a href="/signup" class="btn border">
+                    <i class="fas fa-user text-info"></i>
+                    <span class="badge">Sign Up</span>
+                </a>
+                <a href="/signin" class="btn border">
+                    <i class="fas fa-user text-info"></i>
+                    <span class="badge">Login</span>
+                </a>
+                {% else %}
+                <div class="dropdown">
+                    {% for user in user %}
+                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        {% if user[1] == 'default' %}
+                        <img src="{{ url_for('static', filename='img/user.jpg') }}" width="70" class="rounded-circle" />
+                        {% elif user[1] == 'default_admin' %}
+                        <img src="{{ url_for('static', filename='img/admin.png') }}" width="40"
+                            class="rounded-circle" />
+                        {% else %}
+                        <img src="{{ user[1] }}" width="40" height="40" class="rounded-circle" />
+                        {% endif %}
+                    </button>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/user">History</a></li>
+                        {% if user[2] == 'Admin' %}
+                        <li><a class="dropdown-item" href="/admin">Admin Menu</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p>Ketentuan Pariwisata Halal Perspektif Fatwa DSN-MUI
+                    <br>
+                    <br>
+                    Fatwa NO:1 08/DSN-MUI/2016 tentang pedoman penyelenggaraan pariwisata berdasarkan
+                    prinsip syariah. Ditetapkan tiga ranah kewajiban, yakni upaya pencapaian, fasilitas yang wajib dimiliki, dan berbagai upaya yang
+                    wajib dihindari.
+                    <br>
+                    Pertama, wajib dicapai dengan melalui ikhtiar:
+                    <br>
+                    1. Mewujudkan kemaslahatan umum
+                    <br>
+                    2. Memperoleh pencerahan, penyegaran, dan penenangan
+                    <br>
+                    3. Memelihara amanah, keamanan, dan kenyamanan
+                    <br>
+                    4. Mewujudkan kebaikan yang bersifat universal dan inklusif
+                    <br>
+                    5. Memelihara kebersihan, kelestarian alam, sanitasi, dan lingkungan
+                    <br>
+                    6. Menghormati nilai-nilai sosial-budaya dan kearifan lokal yang tidak melanggar prinsip syariah
+                    <br>
+                    <br>
+                    Kedua, berbagai fasilitas yang wajib tersedia, yakni berupa sarana ibadah yang layak pakai, 
+                    mudah dijangkau dan memenuhi persyaratan syariah. Di samping tersedianya makanan dan minuman halal 
+                    yang jelas terjamin kehalaannya dengan Sertifikasi Halal MUI.
+                    <br>
+                    <br>
+                    Untuk selanjutnya yang Ketiga, agar wisatawan Muslim tidak
+                    terganggu keyakinannya dan tetap turut menjaga muruah-nya sebagai
+                    Muslim, hendaknya pada setiap destinasi halal wajib terhindar
+                    dari berbagai hal yang menjurus pada kemusyrikan dan khurafat,
+                    maksiat, zina, pornografi, pornoaksi, minuman yang memabukkan,
+                    narkoba dan judi. 
+                </p>
+                <p class="src">Sumber : PARIWISATA HALAL PERSPEKTIF MULTIDIMENSI
+                    Peta Jalan Menuju Pengembangan Akademik & Industri Halal di Indonesia - 2017</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="logo-partner">
+          <img src="{{ url_for('static', filename='img/icon.png') }}" alt="Partner 1" />
+          <img src="{{ url_for('static', filename='img/logo_uin.png') }}" alt="Partner 2" />
+        </div>
+        <div class="logo-partner">
+          <img src="{{ url_for('static', filename='img/logo_halal.png') }}" alt="Partner 2" />
+          <img src="{{ url_for('static', filename='img/logo_kemenparekraf.png') }}" alt="Partner 2" />
+        </div>
+        <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+          <li class="ms-3"><a href="/tentang">Tentang</a></li>
+        </ul>
+    </footer>
+</body>
+
+</html>

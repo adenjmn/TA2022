@@ -130,7 +130,9 @@ app = Flask(__name__)
 app.secret_key = "@adenjmn"
 
 @app.route("/")
-def home():    
+def home():
+    new_data = metadata()
+    _search = new_data.sort_values(by=['tempat']).values.tolist()   
     if 'id_user' in session:
         msg = "Berhasil masuk"
         user_id = session["id_user"]
@@ -138,10 +140,26 @@ def home():
         cursor = koneksi()
         cursor.execute('SELECT id_user,img_src,status FROM user WHERE id_user=? order by id_user limit 1',(user_id,))
         user = cursor.fetchall()
-        return render_template('index.html', msg=msg,user=user)
+        return render_template('index.html', msg=msg,user=user,search=_search)
     else:
-        return render_template('index.html')
+        return render_template('index.html',search=_search)
 
+@app.route('/tentang')
+def about():
+    if 'id_user' in session:
+        userId = session["id_user"]
+        cursor = koneksi()
+        cursor.execute('SELECT * FROM user WHERE id_user=? order by id_user limit 1',(userId,))
+        user = cursor.fetchall()
+
+        cursor.execute('SELECT * FROM ratings WHERE id_user=?',(userId,))
+        history = cursor.fetchall()
+        n_history = len(history)
+        # print(user)
+        
+        return render_template('tentang.html', msg=msg,user=user)
+    else:
+        return render_template('tentang.html')
 @app.route('/admin')
 def admin():
     if 'id_user' in session:
@@ -436,7 +454,7 @@ def signin():
 
 @app.route('/signup')
 def signup():
-    return render_template('daftar.html')
+    return render_template('signup.html')
 
 @app.route('/register', methods=["POST", "GET"])
 def register():
@@ -456,7 +474,7 @@ def register():
             return redirect(url_for('home'))
         except:
             msg = ['Pengguna dengan ID tersebut sudah ada.']
-            return render_template('daftar.html',msg=msg)
+            return render_template('signup.html',msg=msg)
             
 @app.route('/login', methods=["POST", "GET"])
 def login():
@@ -534,6 +552,7 @@ def ulasan():
 def rekomendasi(tempat):
     start_time = time.time()
     meta = metadata()
+    _search = meta.sort_values(by=['tempat']).values.tolist()
     meta = meta.reset_index()
     tempats = meta['tempat']
     indices = pd.Series(meta.index, index=meta['tempat'])
@@ -580,7 +599,7 @@ def rekomendasi(tempat):
         precisions, recalls = precision_recall_at_k(predictions, k=5, threshold=4)
 
         # Precision and recall can then be averaged over all users
-        print("PRECISION")
+        print("PRECISION K-FOLD SVD")
         print(sum(prec for prec in precisions.values()) / len(precisions))
         # print("RECALL")
         # print(sum(rec for rec in recalls.values()) / len(recalls))
@@ -646,6 +665,12 @@ def rekomendasi(tempat):
         wisatas['cosine'] = cosine
         wisatas = wisatas[wisatas['cosine'] > threshold]
         wisatas = wisatas[wisatas.tempat != tempat]
+        if wisatas.empty:
+            threshold = 0.2
+            wisatas = meta.iloc[wisata_indices][['tempat', 'features','id_tempat','id_tempat_rating','jenis','kota','avg_rating','src_img','deskripsi','latitude','longitude','distance']]
+            wisatas['cosine'] = cosine
+            wisatas = wisatas[wisatas['cosine'] > threshold]
+        wisatas = wisatas[wisatas.tempat != tempat]
         print('SWITCH - CONTENT BASED')
         # Evaluate CBF
         evaluate_cbf(tempat,cosine_sim,idx)
@@ -656,10 +681,9 @@ def rekomendasi(tempat):
     src_rating['tempat'] = src_rating['tempat'].str.title() # nama tempat
     src_reviews = src_rating.loc[src_rating['tempat'] == tempat]
     
-    search = meta[['tempat']]
+    
     recS = wisatas.values.tolist()
     
-    # arr_meta = search.values.tolist()
     arr_src_reviews = src_reviews.values.tolist()
     
     halal = meta_halal()
@@ -712,14 +736,14 @@ def rekomendasi(tempat):
 
     print(f"Waktu pemrosesan: {processing_time} detik")
 
-    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category,user=user)
+    return render_template('detail.html', title=title,data=recS, _select_wisata=arr_select_wisata, reviews=arr_src_reviews,mosque=mosque,resto=resto,hotel=hotel,atm=atm,category=arr_category,user=user,search=_search)
 
 @app.route("/destinasi/")
 @app.route("/destinasi/<filter>")
 def explore(filter = None):
     new_data = metadata()
     new_data = new_data.sort_index(ascending=True)
-
+    _search = new_data.sort_values(by=['tempat']).values.tolist()
     if 'id_user' in session:
         user_id = session["id_user"]
         cursor = koneksi()
@@ -730,12 +754,12 @@ def explore(filter = None):
     if (filter=='populer'):
         data_trend = new_data.sort_values(by='count_tempat',ascending=False)
         _data = data_trend.values.tolist()
-        return render_template('destinasi.html', data=_data, filter=filter, user=user)
+        return render_template('explore.html', data=_data, filter=filter, user=user,search=_search)
 
     elif (filter == 'rating'):
         data_rate = new_data.sort_values(by='avg_rating',ascending=False)
         _data = data_rate.values.tolist()
-        return render_template('destinasi.html', data=_data,filter=filter, user=user)
+        return render_template('explore.html', data=_data,filter=filter, user=user,search=_search)
         
     elif (filter == 'terdekat'):
         if 'location_data' in session:
@@ -750,7 +774,7 @@ def explore(filter = None):
     else:
         _data = new_data.values.tolist()
     
-    return render_template('destinasi.html', data=_data,filter=filter, user=user)
+    return render_template('explore.html', data=_data,filter=filter, user=user,search=_search)
 
 @app.route('/deteksi_lokasi', methods=['POST'])
 def deteksi_lokasi():
