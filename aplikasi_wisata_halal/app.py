@@ -670,6 +670,7 @@ def rekomendasi(tempat):
             wisatas = meta.iloc[wisata_indices][['tempat', 'features','id_tempat','id_tempat_rating','jenis','kota','avg_rating','src_img','deskripsi','latitude','longitude','distance']]
             wisatas['cosine'] = cosine
             wisatas = wisatas[wisatas['cosine'] > threshold]
+        print("threshold = ",threshold)
         wisatas = wisatas[wisatas.tempat != tempat]
         print('SWITCH - CONTENT BASED')
         # Evaluate CBF
@@ -773,8 +774,8 @@ def explore(filter = None):
         _data = new_data.values.tolist()
     else:
         _data = new_data.values.tolist()
-    
-    return render_template('explore.html', data=_data,filter=filter, user=user,search=_search)
+    myAddress = session['location_data']['address']
+    return render_template('explore.html', data=_data,filter=filter, user=user,search=_search,address=myAddress)
 
 @app.route('/deteksi_lokasi', methods=['POST'])
 def deteksi_lokasi():
@@ -782,8 +783,9 @@ def deteksi_lokasi():
     print("Received location data from JavaScript:", geolocation)
     # Lakukan operasi atau kirim respons ke JavaScript
     response_data = {"message": "Location data received successfully!"}
-    latitude = geolocation['latitude']
-    longitude = geolocation['longitude']
+    # latitude = geolocation['latitude']
+    # longitude = geolocation['longitude']
+    # address = geolocation['address']
     session['location_data'] = geolocation
     # print("SESSION",session['location_data']['latitude'])
     

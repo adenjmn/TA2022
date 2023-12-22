@@ -141,9 +141,14 @@
     </div>
   </div>
   <!-- Navbar End -->
-
+  
   <!-- Package Start -->
   <div class="container-xxl py-5">
+    <div class="col-lg-12 d-flex justify-content-center">
+      {% if filter == 'terdekat' %}
+      <i class="fa fa-map-marker-alt me-2"></i><p>{{address}}</p>
+      {% endif %}
+    </div>
     <div class="cards">
       {% for d in data %}
       <li class="ncard">

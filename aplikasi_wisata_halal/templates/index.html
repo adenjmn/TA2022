@@ -100,7 +100,7 @@
   </div>
   {% endfor %}
   <!-- Topbar End -->
-
+  
   <!-- Navbar Start -->
   <div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
@@ -119,6 +119,9 @@
             </div>
           </div>
         </nav>
+        <div id="cek_lokasi">
+          <p>Harap Tunggu Sedang Cek Lokasi...</p>
+        </div>
         <div id="header-carousel" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active" style="height: 410px">
@@ -165,7 +168,7 @@
     </div>
   </div>
   <!-- Navbar End -->
-
+  
   <!-- Featured Start -->
   <div class="container-fluid pt-5">
     <div class="row px-xl-5 pb-3">
@@ -237,34 +240,77 @@
   <script src="lib/easing/easing.min.js"></script>
   <script src="lib/owlcarousel/owl.carousel.min.js"></script>
   <script>
-    // Mendapatkan lokasi pengguna menggunakan API Geolocation
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        var locationData = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        };
+    // Handler untuk mendapatkan lokasi setelah halaman dimuat
+    document.addEventListener("DOMContentLoaded", function() {
+      getLocationAndSendData();
+    });
 
-        // Kirim data lokasi menggunakan Fetch API
-        fetch('/deteksi_lokasi', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(locationData)
-        })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Response from Flask:', data);
-          })
-          .catch(error => {
-            console.error('Error sending location data to Flask:', error);
-          });
-      },
-      function (error) {
-        console.error('Error getting location:', error);
+    function getLocationAndSendData() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        alert("Geolocation is not supported by this browser.");
       }
-    );
+    }
+
+    function showPosition(position) {
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
+
+      // Panggil fungsi untuk mendapatkan alamat
+      getAddress(latitude, longitude);
+    }
+
+    function showError(error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          alert("User denied the request for Geolocation.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Location information is unavailable.");
+          break;
+        case error.TIMEOUT:
+          alert("The request to get user location timed out.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("An unknown error occurred.");
+          break;
+      }
+    }
+
+    function getAddress(latitude, longitude) {
+      var apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          var address = data.display_name;
+
+          // Kirim data ke server
+          sendDataToServer({ latitude, longitude, address });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function sendDataToServer(data) {
+      fetch('/deteksi_lokasi', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(responseData => {
+        console.log('Data sent successfully:', responseData);
+      })
+      .catch(error => {
+        console.error('Error sending data:', error);
+      });
+      document.getElementById("cek_lokasi").style.display = "none";
+    }
   </script>
 </body>
 
